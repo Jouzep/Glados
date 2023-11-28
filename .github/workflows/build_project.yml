@@ -36,6 +36,11 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v3
 
+      - name: Set permissions on directories
+        run: |
+          chmod 777 /github/home
+          chmod 777 /github/home/.stack
+
       - name: Build project
         timeout-minutes: 2
         run: make
