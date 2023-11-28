@@ -39,7 +39,6 @@ jobs:
       - name: Set permissions on directories
         run: |
           chmod 777 /github/home
-          chmod 777 /github/home/.stack
 
       - name: Build project
         timeout-minutes: 2
