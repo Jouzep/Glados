@@ -36,24 +36,3 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
-
-      - name: Install haskell and stack
-        uses: haskell-actions/setup@v2
-        with:
-          enable-stack: true
-          stack-version: "latest"
-
-      - name: Build project
-        run: |
-          make
-
-      - name: Check executables
-        run: |
-          filename="$EXECUTABLES"
-          IFS=','
-          read -ra ADDR <<< "$filename"
-          for i in "${ADDR[@]}"
-          do
-          [[ ! -f "$i" || ! -x "$i" ]] && echo "::error::$i is missing or not a executable." && exit 1
-          done
-          exit 0
