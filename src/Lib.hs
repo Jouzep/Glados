@@ -13,7 +13,11 @@ data Ast
   = Define  String Ast
   | IntLiteral Int
   | Symbol  String
+  -- | Add Ast Ast
+  -- | Multiply Ast Ast
   | Boolean  Bool
+  | Call String [Ast]
+
   deriving (Show)
 
 someFunc :: IO ()
@@ -40,5 +44,13 @@ sexprToAST (ListExpress [SymbolExpression "define", SymbolExpression var, expr])
   case sexprToAST expr of
     Just astExpr -> Just (Define var astExpr)
     Nothing      -> Nothing
+-- sexprToAST (ListExpress [SymbolExpression "+", SymbolExpression var, expr]) =
+--   case sexprToAST expr of
+--     Just astExpr -> Just (Call var [Add astExpr])
+--     Nothing      -> Nothing
+sexprToAST (ListExpress [SymbolExpression "+", SymbolExpression var, args]) = 
+  case sexprToAST args of
+    Just astExpr -> Just (Call "+" [Symbol var, astExpr])
+    Nothing -> Nothing
 sexprToAST _ = Nothing
 _ = Nothing
