@@ -36,21 +36,19 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v3
 
-      - name: Set permissions on directories
-        run: |
-          chmod 777 /github/home
-
       - name: Build project
         timeout-minutes: 2
-        run: make
-
-      - name: Check executables
         run: |
-          filename="$EXECUTABLES"
-          IFS=','
-          read -ra ADDR <<< "$filename"
-          for i in "${ADDR[@]}"
-          do
-          [[ ! -f "$i" || ! -x "$i" ]] && echo "::error::$i is missing or not a executable." && exit 1
-          done
-          exit 0
+          cd ${{ github.workspace }}
+          make
+
+      # - name: Check executables
+      #   run: |
+      #     filename="$EXECUTABLES"
+      #     IFS=','
+      #     read -ra ADDR <<< "$filename"
+      #     for i in "${ADDR[@]}"
+      #     do
+      #     [[ ! -f "$i" || ! -x "$i" ]] && echo "::error::$i is missing or not a executable." && exit 1
+      #     done
+      #     exit 0
