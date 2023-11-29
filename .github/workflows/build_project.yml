@@ -1,0 +1,56 @@
+name: Glados
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+
+env:
+  EXECUTABLES: "Glados"
+
+jobs:
+  check_repository_cleanliness:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Check for .stack-work directory
+        run: |
+          if [ -d .stack-work ]; then
+            echo "::error::Found .stack-work directory. Please remove it."
+            exit 1
+          else
+            echo "No .stack-work directory found."
+          fi
+  build_linux:
+    runs-on: ubuntu-latest
+    container: epitechcontent/epitest-docker:latest
+    needs: [check_repository_cleanliness]
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Set permissions on directories
+        run: |
+          chmod 777 /github/home
+
+      - name: Build project
+        timeout-minutes: 2
+        run: make
+
+      - name: Check executables
+        run: |
+          filename="$EXECUTABLES"
+          IFS=','
+          read -ra ADDR <<< "$filename"
+          for i in "${ADDR[@]}"
+          do
+          [[ ! -f "$i" || ! -x "$i" ]] && echo "::error::$i is missing or not a executable." && exit 1
+          done
+          exit 0
