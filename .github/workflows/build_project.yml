@@ -39,6 +39,7 @@ jobs:
       - name: Build project
         timeout-minutes: 2
         run: |
+          pwd
           cd ${{ github.workspace }}
           make
 
