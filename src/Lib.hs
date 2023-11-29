@@ -8,6 +8,18 @@ data SExpr
     | ListExpress [SExpr]
     deriving Show
 
+
+data Ast = Define ? ?
+| ? Int
+...
+deriving Show
+
+data Ast
+  = Define String Ast
+  | IntLiteral Int
+  | Symbol { symbolValue :: String }
+  | Boolean { boolValue :: Bool }
+  deriving (Show)
 someFunc :: IO ()
 someFunc = putStrLn "someFunc"
 
