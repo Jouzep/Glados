@@ -85,27 +85,43 @@ evalAST (Call "-" args) = do
 evalAST (Call func _) =
     Just $ Symbol $ "Unrecognized function: " ++ func
 
+type Parser a = String -> Maybe (a, String)
 
--- Just (Define "x" (IntLiteral 5))
--- *Lib> let a = ListExpress [SymbolExpression "define", SymbolExpression "x", IntExpression 5]
--- *Lib> let b  = ListExpress [SymbolExpression "+", Int]
--- Int            IntExpression  IntLiteral     Integer        Integral
--- *Lib> let b  = ListExpress [SymbolExpression "+", SymbolExpression "x", IntExpression 4]
--- *Lib> sexprToAST b
--- Just (Call "+" [Symbol "x",IntLiteral 4])
--- *Lib> let c  = ListExpress [SymbolExpression "+", SymbolExpression "x", IntExpression 4, IntExpression 5]
--- *Lib> sexprToAST c
--- Nothing
--- *Lib> let b = ListExpress [SymbolExpression "+", SymbolExpression "x", ListExpress [SymbolExpression "*", IntExpression 4, SymbolExpression "y"]]
--- *Lib> sexprToAST b
--- Just (Call "+" [Symbol "x",Call "+" [IntLiteral 4,Symbol "y"]])
--- *Lib> let c = ListExpress [SymbolExpression "Define", SymbolExpression "fourtyTwo", ListExpress [SymbolExpression "*", IntExpression 7, Int]]
--- Int            IntExpression  IntLiteral     Integer        Integral
--- *Lib> let c = ListExpress [SymbolExpression "Define", SymbolExpression "fourtyTwo", ListExpress [SymbolExpression "*", IntExpression 7, IntExpression 6]]
--- *Lib> sexprToAST c
--- Nothing
--- *Lib> let c = ListExpress [SymbolExpression "define", SymbolExpression "fourtyTwo", ListExpress [SymbolExpression "*", IntExpression 7, IntExpression 6]]
--- *Lib> sexprToAST c
--- Just (Define "fourtyTwo" (Call "+" [IntLiteral 7,IntLiteral 6]))
+parseChar :: Char -> Parser Char
+parseChar expectedChar (c:rest) | c == expectedChar = Just (c, rest)
+parseChar _ _ = Nothing
 
--- evalAST :: Ast -> Maybe Ast
+parseAnyChar :: String -> Parser Char
+parseAnyChar (a:aRest) (b:bRest) | a == b = Just(a, bRest)
+parseAnyChar (x:xs) str = parseAnyChar xs str
+parseAnyChar _ _ = Nothing
+
+parseOr :: Parser a -> Parser a -> Parser a
+parseOr parser1 parser2 input =
+  case parser1 input of
+    Just result -> Just result
+    Nothing     -> parser2 input
+
+parseAnd :: Parser a -> Parser b -> Parser (a , b )
+parseAnd parser1 parser2 input =
+  case parser1 input of
+    Just (result1, rest) ->
+      case parser2 rest of
+        Just (result2, rest2) -> Just ((result1, result2), rest2)
+        Nothing               -> Nothing
+    Nothing -> Nothing
+
+parseAndWith :: ( a -> b -> c ) -> Parser a -> Parser b -> Parser c
+parseAndWith combine parser1 parser2 input =
+  case parseAnd parser1 parser2 input of
+    Just ((result1, result2), rest) -> Just (combine result1 result2, rest)
+    Nothing                         -> Nothing
+
+parseMany :: Parser a -> Parser [ a ]
+parseMany parser input =
+  case parser input of
+    Just (result, rest) ->
+      case parseMany parser rest of
+        Just (results, rest2) -> Just (result : results, rest2)
+        Nothing               -> Just ([result], rest)
+    Nothing -> Just ([], input)
