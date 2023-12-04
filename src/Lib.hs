@@ -44,13 +44,68 @@ sexprToAST (ListExpress [SymbolExpression "define", SymbolExpression var, expr])
   case sexprToAST expr of
     Just astExpr -> Just (Define var astExpr)
     Nothing      -> Nothing
--- sexprToAST (ListExpress [SymbolExpression "+", SymbolExpression var, expr]) =
---   case sexprToAST expr of
---     Just astExpr -> Just (Call var [Add astExpr])
---     Nothing      -> Nothing
-sexprToAST (ListExpress [SymbolExpression "+", SymbolExpression var, args]) = 
-  case sexprToAST args of
-    Just astExpr -> Just (Call "+" [Symbol var, astExpr])
-    Nothing -> Nothing
+sexprToAST (ListExpress [SymbolExpression "+", var, args]) = 
+  case (sexprToAST args, sexprToAST var) of
+    (Just astExpr, Just astExpre )-> Just (Call "+" [astExpre, astExpr])
+    (Nothing, Nothing) -> Nothing
+sexprToAST (ListExpress [SymbolExpression "*", var, args]) = 
+  case (sexprToAST args, sexprToAST var) of
+    (Just astExpr, Just astExpre )-> Just (Call "+" [astExpre, astExpr])
+    (Nothing, Nothing) -> Nothing
 sexprToAST _ = Nothing
 _ = Nothing
+
+
+evalAST :: Ast -> Maybe Ast
+evalAST (IntLiteral n) = Just (IntLiteral n)
+evalAST (Symbol _) = Nothing
+
+evalAST (Define var expr) = do
+    value <- evalAST expr
+    Just (Define var value)
+
+evalAST (Call "+" args) = do
+    argValues <- traverse evalAST args
+    case argValues of
+        [IntLiteral a, IntLiteral b] -> Just (IntLiteral (a + b))
+        _ -> Nothing
+
+evalAST (Call "*" args) = do
+    argValues <- traverse evalAST args
+    case argValues of
+        [IntLiteral a, IntLiteral b] -> Just (IntLiteral (a * b))
+        _ -> Nothing
+
+evalAST (Call "-" args) = do
+    argValues <- traverse evalAST args
+    case argValues of
+        [IntLiteral a, IntLiteral b] -> Just (IntLiteral (a - b))
+        _ -> Nothing
+
+evalAST (Call func _) =
+    Just $ Symbol $ "Unrecognized function: " ++ func
+
+
+-- Just (Define "x" (IntLiteral 5))
+-- *Lib> let a = ListExpress [SymbolExpression "define", SymbolExpression "x", IntExpression 5]
+-- *Lib> let b  = ListExpress [SymbolExpression "+", Int]
+-- Int            IntExpression  IntLiteral     Integer        Integral
+-- *Lib> let b  = ListExpress [SymbolExpression "+", SymbolExpression "x", IntExpression 4]
+-- *Lib> sexprToAST b
+-- Just (Call "+" [Symbol "x",IntLiteral 4])
+-- *Lib> let c  = ListExpress [SymbolExpression "+", SymbolExpression "x", IntExpression 4, IntExpression 5]
+-- *Lib> sexprToAST c
+-- Nothing
+-- *Lib> let b = ListExpress [SymbolExpression "+", SymbolExpression "x", ListExpress [SymbolExpression "*", IntExpression 4, SymbolExpression "y"]]
+-- *Lib> sexprToAST b
+-- Just (Call "+" [Symbol "x",Call "+" [IntLiteral 4,Symbol "y"]])
+-- *Lib> let c = ListExpress [SymbolExpression "Define", SymbolExpression "fourtyTwo", ListExpress [SymbolExpression "*", IntExpression 7, Int]]
+-- Int            IntExpression  IntLiteral     Integer        Integral
+-- *Lib> let c = ListExpress [SymbolExpression "Define", SymbolExpression "fourtyTwo", ListExpress [SymbolExpression "*", IntExpression 7, IntExpression 6]]
+-- *Lib> sexprToAST c
+-- Nothing
+-- *Lib> let c = ListExpress [SymbolExpression "define", SymbolExpression "fourtyTwo", ListExpress [SymbolExpression "*", IntExpression 7, IntExpression 6]]
+-- *Lib> sexprToAST c
+-- Just (Define "fourtyTwo" (Call "+" [IntLiteral 7,IntLiteral 6]))
+
+-- evalAST :: Ast -> Maybe Ast

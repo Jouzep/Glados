@@ -1,0 +1,18 @@
+? /home/joseph/.stack/programs/x86_64-linux/ghc-tinfo6-9.4.8/lib/ghc-9.4.8/lib/x86_64-linux-ghc-9.4.8/rts-1.0.2/include/ghcversion.h
+: hash: 4bc88722407a89d1efbfa9c116cd4017af6ea3ff746643032b96cef62782f5dd
+? /home/joseph/home/tek/B-FUN-500-PAR-5-2-glados-joseph.yu/.stack-work/dist/x86_64-linux-tinfo6/ghc-9.4.8/build/Glados/autogen/Paths_Glados.hs
+: hash: 4808fd6d17c13b0217761d36c17a1a3a0308137319620afcac9ee139401fd1fc
+? /home/joseph/home/tek/B-FUN-500-PAR-5-2-glados-joseph.yu/.stack-work/dist/x86_64-linux-tinfo6/ghc-9.4.8/build/Glados/autogen/cabal_macros.h
+: hash: 32f6955b539ae62fe9c37c20dafff938c61ffde00b719256101ccbe771f42363
+/home/joseph/home/tek/B-FUN-500-PAR-5-2-glados-joseph.yu/CHANGELOG.md:
+  hash: 281f8feb9be9f5c1b4eff715513bd431e27337ee37f44627bfea9895ec36d6d4
+/home/joseph/home/tek/B-FUN-500-PAR-5-2-glados-joseph.yu/Glados.cabal:
+  hash: 13da8f91db9c2b1e4825cdea143bcedea70d118bf79e4076e82996fb5b410b0f
+/home/joseph/home/tek/B-FUN-500-PAR-5-2-glados-joseph.yu/README.md:
+  hash: 69c22a7235034061e9ec8eaa8150cfc85ae96867c06e5ba629cad7d4eba6949e
+/home/joseph/home/tek/B-FUN-500-PAR-5-2-glados-joseph.yu/app/Main.hs:
+  hash: f95f21e7e5342fc9e967963e089dd47b3d5838ea941a7e3aacfce82eb1ef4f93
+/home/joseph/home/tek/B-FUN-500-PAR-5-2-glados-joseph.yu/package.yaml:
+  hash: 78e661370193252e4c2d992ce4c929a54a02cf6c49874704c599f0590e56bd35
+/usr/include/stdc-predef.h:
+  hash: cb08cd5d4cc059a90833ac48a284d25016e8d56ded8ad4cd98d8ac59cc5053f3
