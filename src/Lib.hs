@@ -85,7 +85,6 @@ evalAST (Call "-" args) = do
 evalAST (Call func _) =
     Just $ Symbol $ "Unrecognized function: " ++ func
 
-type Parser a = String -> Maybe (a, String)
 
 parseChar :: Char -> Parser Char
 parseChar expectedChar (c:rest) | c == expectedChar = Just (c, rest)
@@ -102,7 +101,7 @@ parseOr parser1 parser2 input =
     Just result -> Just result
     Nothing     -> parser2 input
 
-parseAnd :: Parser a -> Parser b -> Parser (a , b )
+parseAnd :: Parser a -> Parser b -> Parser (a, b)
 parseAnd parser1 parser2 input =
   case parser1 input of
     Just (result1, rest) ->
@@ -117,7 +116,7 @@ parseAndWith combine parser1 parser2 input =
     Just ((result1, result2), rest) -> Just (combine result1 result2, rest)
     Nothing                         -> Nothing
 
-parseMany :: Parser a -> Parser [ a ]
+parseMany :: Parser a -> Parser [a]
 parseMany parser input =
   case parser input of
     Just (result, rest) ->
@@ -125,3 +124,19 @@ parseMany parser input =
         Just (results, rest2) -> Just (result : results, rest2)
         Nothing               -> Just ([result], rest)
     Nothing -> Just ([], input)
+
+parseSome :: Parser a -> Parser [a]  --  = String -> Maybe (a, String)
+parseSome parser input =
+  case parseMany parser input of
+    Just (results, rest) ->
+      if null results
+        then Nothing
+        else Just (results, rest)
+    Nothing -> Nothing
+
+type Parser a = String -> Maybe (a, String)
+
+
+parseUInt :: Parser Int
+
+parseInt :: Parser Int
