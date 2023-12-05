@@ -1,0 +1,43 @@
+name: Glados CD
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up GHC
+        uses: haskell-actions/setup@v2
+
+      - name: Update and retrieve package version
+        id: tag
+        run: |
+          package_version="$(awk '/^version:/{print $2}' package.yaml)"
+          echo "Release version $package_version"
+          echo "PACKAGE_VERSION=$package_version" >> $GITHUB_ENV
+
+      - name: Create release
+        run: make release
+
+      - name: Create artifact
+        run: |
+          package_version="$(awk '/^version:/{print $2}' package.yaml)"
+          tar -czvf "glados-v$package_version.tar.gz" .stack-work/install
+
+      - name: Create GitHub Release
+        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.PACKAGE_VERSION }}
+          files: |
+            glados-v${{ env.PACKAGE_VERSION }}.tar.gz

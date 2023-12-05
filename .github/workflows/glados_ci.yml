@@ -1,0 +1,55 @@
+name: Glados CI
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+
+env:
+  EXECUTABLES: "Glados"
+
+jobs:
+  check_repository_is_clean:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Check for .stack-work directory
+        run: |
+          if [ -d .stack-work ]; then
+            echo "::error::Found .stack-work directory. Please remove it."
+            exit 1
+          else
+            echo "No .stack-work directory found."
+          fi
+
+  build-project:
+    runs-on: ubuntu-latest # Use an Ubuntu-based image
+    needs: [check_repository_is_clean]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up GHC
+        uses: haskell-actions/setup@v2
+
+      - name: Build with Stack
+        timeout-minutes: 2
+        run: |
+          make
+      - name: Check executables
+        run: |
+          filename="$EXECUTABLES"
+          IFS=','
+          read -ra ADDR <<< "$filename"
+          for i in "${ADDR[@]}"
+          do
+          [[ ! -f "$i" || ! -x "$i" ]] && echo "::error::$i is missing or not a executable." && exit 1
+          done
+          exit 0
