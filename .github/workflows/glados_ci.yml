@@ -36,9 +36,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up GHC
-        uses: haskell-actions/setup@v2
-
+      - name: Install Stack
+        run: curl -sSL https://get.haskellstack.org/ | sh -s - -d /opt/stack/bin
       - name: Build with Stack
         timeout-minutes: 2
         run: |
