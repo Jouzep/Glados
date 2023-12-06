@@ -137,6 +137,6 @@ parseSome parser input =
 type Parser a = String -> Maybe (a, String)
 
 
-parseUInt :: Parser Int
+-- parseUInt :: Parser Int
 
-parseInt :: Parser Int
+-- parseInt :: Parser Int
