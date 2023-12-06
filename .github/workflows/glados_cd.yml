@@ -9,35 +9,38 @@ permissions:
   contents: write
   packages: write
 
+env:
+  tar: "glados.tar.gz"
+
 jobs:
   build:
+    name: Create Release
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Install Stack
         run: curl -sSL https://get.haskellstack.org/ | sh -s - -d /opt/stack/bin
 
-      - name: Release Version
+      - name: Build with Stack
+        run: |
+          make artifact
+
+      - name: Set Artifact version
         id: tag
         run: |
           package_version="$(awk '/^version:/{print $2}' package.yaml)"
           echo "Release version $package_version"
           echo "PACKAGE_VERSION=$package_version" >> $GITHUB_ENV
 
-      - name: Create release
-        run: make release
-
-      - name: Create artifact
-        run: |
-          package_version="$(awk '/^version:/{print $2}' package.yaml)"
-          tar -czvf "glados-v$package_version.tar.gz" .stack-work/install
-
-      - name: Create GitHub Release
-        if: ${{ github.ref == 'refs/heads/main' }}
-        uses: softprops/action-gh-release@v1
+      - name: Move and rename file
+        run: mv ${{ env.tar }} "glados-v${{ env.PACKAGE_VERSION }}.tar.gz"
+      - uses: ncipollo/release-action@v1
         with:
-          tag_name: ${{ env.PACKAGE_VERSION }}
-          files: |
-            glados-v${{ env.PACKAGE_VERSION }}.tar.gz
+          tag: ${{ env.PACKAGE_VERSION }}
+          artifacts: "glados-v${{ env.PACKAGE_VERSION }}.tar.gz"
+          allowUpdates: true
+          # skipIfReleaseExists: true
+          token: ${{ github.token }}
+          replacesArtifacts: true
