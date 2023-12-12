@@ -21,6 +21,10 @@ fclean: clean
 	rm -f $(NAME)
 	stack purge
 
+unit_tests:
+	stack test --coverage
+	stack hpc report --all
+
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean unit_tests re
