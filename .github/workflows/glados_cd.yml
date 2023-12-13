@@ -17,13 +17,16 @@ jobs:
     name: Create Release
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout the repository
         uses: actions/checkout@v3
 
-      - name: Install Stack
-        run: curl -sSL https://get.haskellstack.org/ | sh -s - -d /opt/stack/bin
+      - name: Install haskell and stack
+        uses: haskell-actions/setup@v2
+        with:
+          enable-stack: true
+          stack-version: "latest"
 
-      - name: Build with Stack
+      - name: Build release
         run: |
           make artifact
 
@@ -36,11 +39,13 @@ jobs:
 
       - name: Move and rename file
         run: mv ${{ env.tar }} "glados-v${{ env.PACKAGE_VERSION }}.tar.gz"
-      - uses: ncipollo/release-action@v1
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
         with:
           tag: ${{ env.PACKAGE_VERSION }}
           artifacts: "glados-v${{ env.PACKAGE_VERSION }}.tar.gz"
           allowUpdates: true
-          # skipIfReleaseExists: true
           token: ${{ github.token }}
           replacesArtifacts: true
+          bodyFile: "CHANGELOG.md"

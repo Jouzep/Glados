@@ -16,6 +16,7 @@ env:
 jobs:
   check_repository_is_clean:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
@@ -30,18 +31,22 @@ jobs:
           fi
 
   build-project:
-    runs-on: ubuntu-latest # Use an Ubuntu-based image
+    runs-on: ubuntu-latest
     needs: [check_repository_is_clean]
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Checkout the repository
+        uses: actions/checkout@v3
 
-      - name: Install Stack
-        run: curl -sSL https://get.haskellstack.org/ | sh -s - -d /opt/stack/bin
-      - name: Build with Stack
-        timeout-minutes: 2
+      - name: Install haskell and stack
+        uses: haskell-actions/setup@v2
+        with:
+          enable-stack: true
+          stack-version: "latest"
+
+      - name: Build project
         run: |
           make
+
       - name: Check executables
         run: |
           filename="$EXECUTABLES"
