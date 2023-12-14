@@ -18,13 +18,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Install libgmp
+        run: |
+          sudo apt-get update
+          sudo apt-get install libgmp10-dev -y
 
       - name: Install haskell and stack
         uses: haskell-actions/setup@v2
         with:
           enable-stack: true
-          stack-version: "latest"
+          stack-version: "2.13.1"
+          ghc-version: "9.4.8"
 
       - name: Build release
         run: |
@@ -49,3 +55,4 @@ jobs:
           token: ${{ github.token }}
           replacesArtifacts: true
           bodyFile: "CHANGELOG.md"
+          skipIfReleaseExists: true
