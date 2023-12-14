@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Check for .stack-work directory
         run: |
@@ -35,4 +35,33 @@ jobs:
     needs: [check_repository_is_clean]
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Install libgmp
+        run: |
+          sudo apt-get update
+          sudo apt-get install libgmp10-dev -y
+
+      - name: Install haskell and stack
+        uses: haskell-actions/setup@v2
+        with:
+          enable-stack: true
+          stack-version: "2.13.1"
+          ghc-version: "9.4.8"
+
+      - name: Setup stack
+        run: stack setup
+      - name: Build project
+        run: |
+          make
+
+      - name: Check executables
+        run: |
+          filename="$EXECUTABLES"
+          IFS=','
+          read -ra ADDR <<< "$filename"
+          for i in "${ADDR[@]}"
+          do
+          [[ ! -f "$i" || ! -x "$i" ]] && echo "::error::$i is missing or not a executable." && exit 1
+          done
+          exit 0
