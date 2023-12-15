@@ -54,7 +54,17 @@ jobs:
       - name: Build project
         run: |
           make
+          make unit_tests
 
+      - name: Check test results
+        run: |
+          if [ "${{ job.outputs.failure }}" = "true" ]; then
+            echo "Tests failed!"
+          else
+            echo "All tests passed!"
+          fi
+        env:
+          JOB_ID: ${{ github.job }}
       - name: Check executables
         run: |
           filename="$EXECUTABLES"
