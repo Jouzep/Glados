@@ -1,0 +1,34 @@
+name: Check Release Existence
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+jobs:
+  check_release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check Release Existence
+        run: |
+          source_branch=$(echo "${{ github.event.before }}" | cut -c1-7)
+          target_branch=$(echo "${{ github.sha }}" | cut -c1-7)
+
+          latest_release=$(curl -sH "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/releases/latest" | jq -r .tag_name)
+
+          echo "Latest release tag: $latest_release"
+
+          if [ "$latest_release" == "null" ]; then
+            echo "No release found for the latest commit."
+          else
+            echo "Release $latest_release already exists."
+            exit 1
+          fi

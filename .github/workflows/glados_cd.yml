@@ -1,9 +1,11 @@
 name: Glados CD
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["Glados CI", "Check Release Existence"]
+    branches: [main]
+    types:
+      - completed
 
 permissions:
   contents: write
