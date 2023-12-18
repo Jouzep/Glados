@@ -15,16 +15,16 @@ convertSExprToAst _ = error "Invalid SExpr"
 
 stringToBinaryOp :: String -> AstBinaryOp
 stringToBinaryOp "+" = Add
-stringToBinaryOp "*" = Mul
+stringToBinaryOp "*" = Multiply
 stringToBinaryOp "-" = Sub
-stringToBinaryOp "/" = Div
-stringToBinaryOp "%" = Mod
-stringToBinaryOp "=" = Eq
-stringToBinaryOp "/=" = NotEq
-stringToBinaryOp "<" = Less
-stringToBinaryOp "<=" = LessOrEq
-stringToBinaryOp ">" = Greater
-stringToBinaryOp ">=" = GreaterOrEq
+stringToBinaryOp "/" = Divide
+stringToBinaryOp "%" = Modulo
+stringToBinaryOp "=" = Equal
+stringToBinaryOp "/=" = NotEqual
+stringToBinaryOp "<" = LessThan
+stringToBinaryOp "<=" = LessThanOrEqual
+stringToBinaryOp ">" = GreaterThan
+stringToBinaryOp ">=" = GreaterThanOrEqual
 stringToBinaryOp "&&" = And
 stringToBinaryOp "||" = Or
 stringToBinaryOp _ = error "Invalid binary operator"
