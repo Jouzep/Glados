@@ -12,4 +12,4 @@ testSomethingElse = TestCase $ do
   assertEqual "Parser Test" expected actual
   where
     expected = 3
-    actual = 1 + 2
+    actual = 1 + 3
