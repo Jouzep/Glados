@@ -1,0 +1,15 @@
+-- test/OtherTests.hs
+
+module ParserTest where
+import Test.HUnit
+
+parserTests :: Test
+parserTests = TestList [testSomethingElse]
+
+-- Define test cases for other functions
+testSomethingElse :: Test
+testSomethingElse = TestCase $ do
+  assertEqual "Parser Test" expected actual
+  where
+    expected = 3
+    actual = 1 + 2

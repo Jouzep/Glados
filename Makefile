@@ -12,12 +12,23 @@ all:
 	 cp $$(stack path --local-install-root)/bin/$(NAME) .
 
 clean:
-	stack clean
+	stack clean --full
+
+artifact: all
+	tar -czvf glados.tar.gz $$(stack path --local-install-root)
 
 fclean: clean
 	rm -f $(NAME)
 	stack purge
+	rm -rf .hpc
+
+
+unit_tests:
+	stack test --coverage
+
+coverage:
+	stack hpc report --all
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean unit_tests coverage re

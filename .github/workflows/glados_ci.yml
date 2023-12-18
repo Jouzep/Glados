@@ -16,9 +16,10 @@ env:
 jobs:
   check_repository_is_clean:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Check for .stack-work directory
         run: |
@@ -30,18 +31,40 @@ jobs:
           fi
 
   build-project:
-    runs-on: ubuntu-latest # Use an Ubuntu-based image
+    runs-on: ubuntu-latest
     needs: [check_repository_is_clean]
     steps:
-      - name: Checkout repository
+      - name: Checkout the repository
         uses: actions/checkout@v4
 
-      - name: Install Stack
-        run: curl -sSL https://get.haskellstack.org/ | sh -s - -d /opt/stack/bin
-      - name: Build with Stack
-        timeout-minutes: 2
+      - name: Install libgmp
+        run: |
+          sudo apt-get update
+          sudo apt-get install libgmp10-dev -y
+
+      - name: Install haskell and stack
+        uses: haskell-actions/setup@v2
+        with:
+          enable-stack: true
+          stack-version: "2.13.1"
+          ghc-version: "9.4.8"
+
+      - name: Setup stack
+        run: stack setup
+      - name: Build project
         run: |
           make
+          make unit_tests
+
+      - name: Check test results
+        run: |
+          if [ "${{ job.outputs.failure }}" = "true" ]; then
+            echo "Tests failed!"
+          else
+            echo "All tests passed!"
+          fi
+        env:
+          JOB_ID: ${{ github.job }}
       - name: Check executables
         run: |
           filename="$EXECUTABLES"
