@@ -7,7 +7,7 @@ import AST.Constants
 import AST.Tree.ConvertToAst
 
 astTests :: Test
-astTests = TestList [arithmeticTests, specificExpressionTests]
+astTests = TestList [arithmeticTests, specificExpressionTests, functionCallTests]
 
 arithmeticTests :: Test
 arithmeticTests = TestList
@@ -29,5 +29,6 @@ arithmeticTests = TestList
 specificExpressionTests :: Test
 specificExpressionTests = TestList
   [ "Test Define" ~: convertSExprToAst (SList [SSymb "define", SSymb "x", SInt 42]) ~?= Define "x" (Var (AstInt 42))
+  , "Test Cond" ~: convertSExprToAst (SList [SSymb "cond", SInt 1, SInt 2, SInt 3]) ~?= Cond (Var (AstInt 1)) (Var (AstInt 2)) (Var (AstInt 3))
   ]
 
