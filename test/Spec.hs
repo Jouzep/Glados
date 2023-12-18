@@ -1,9 +1,4 @@
--- test/Spec.hs
-
-module Main where
-
 import Test.HUnit
-import Lib
 
 import AstTest
 import ParserTest
