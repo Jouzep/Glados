@@ -1,5 +1,7 @@
-module Constants(SExpr, Ast) where
-
+module AST.Constants (
+  module AST.Constants
+) where
+    
 data SExpr
     = SInt Int
     | SSymb String
