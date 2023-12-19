@@ -5,7 +5,7 @@ import AST.Constants
 import Evaluation.Evaluation (evaluation)
 
 evalSimpleGreaterThanTests :: Test
-evalSimpleGreaterThanTests = TestList [testEvalGreaterThan1, testEvalGreaterThan2, testEvalGreaterThan3, testEvalGreaterThan4, testEvalGreaterThan5, testEvalGreaterThan6, testEvalGreaterThan7, testEvalGreaterThan8, testEvalGreaterThan9, testEvalGreaterThan10]
+evalSimpleGreaterThanTests = TestList [testEvalGreaterThan1, testEvalGreaterThan2, testEvalGreaterThan3, testEvalGreaterThan4, testEvalGreaterThan5, testEvalGreaterThan6, testEvalGreaterThan7, testEvalGreaterThan8, testEvalGreaterThan9, testEvalGreaterThan10, testEvalGreaterThan11]
 
 testEvalGreaterThan1 :: Test
 testEvalGreaterThan1 = TestCase $ do
@@ -96,3 +96,12 @@ testEvalGreaterThan10 = TestCase $ do
     b10 = Var (AstInt 0)
     operation10 = BinaryOp GreaterThan a10 b10
     result10 = Var (AstBool "#f")
+
+testEvalGreaterThan11 :: Test
+testEvalGreaterThan11 = TestCase $ do
+  assertEqual "Eval Test GreaterThan #11" (result10) (evaluation operation10)
+  where
+    a10 = Var (AstInt 0)
+    b10 = Var (AstSymb "15")
+    operation10 = BinaryOp GreaterThan a10 b10
+    result10 = Nothing

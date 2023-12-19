@@ -5,7 +5,7 @@ import AST.Constants
 import Evaluation.Evaluation (evaluation)
 
 evalSimpleModuloTests :: Test
-evalSimpleModuloTests = TestList [testEvalModulo1, testEvalModulo2, testEvalModulo3, testEvalModulo4, testEvalModulo5, testEvalModulo6, testEvalModulo7, testEvalModulo8, testEvalModulo9, testEvalModulo10]
+evalSimpleModuloTests = TestList [testEvalModulo1, testEvalModulo2, testEvalModulo3, testEvalModulo4, testEvalModulo5, testEvalModulo6, testEvalModulo7, testEvalModulo8, testEvalModulo9, testEvalModulo10, testEvalModulo11, testEvalModulo12]
 
 testEvalModulo1 :: Test
 testEvalModulo1 = TestCase $ do
@@ -32,7 +32,7 @@ testEvalModulo3 = TestCase $ do
     a3 = Var (AstInt (-10))
     b3 = Var (AstInt 4)
     operation3 = BinaryOp Modulo a3 b3
-    result3 = Var (AstInt (-2))
+    result3 = Var (AstInt (2))
 
 testEvalModulo4 :: Test
 testEvalModulo4 = TestCase $ do
@@ -41,7 +41,7 @@ testEvalModulo4 = TestCase $ do
     a4 = Var (AstInt 100)
     b4 = Var (AstInt (-30))
     operation4 = BinaryOp Modulo a4 b4
-    result4 = Var (AstInt 10)
+    result4 = Var (AstInt (-20))
 
 testEvalModulo5 :: Test
 testEvalModulo5 = TestCase $ do
@@ -68,7 +68,7 @@ testEvalModulo7 = TestCase $ do
     a7 = Var (AstInt (-5))
     b7 = Var (AstInt 3)
     operation7 = BinaryOp Modulo a7 b7
-    result7 = Var (AstInt (-2))
+    result7 = Var (AstInt (1))
 
 testEvalModulo8 :: Test
 testEvalModulo8 = TestCase $ do
@@ -86,7 +86,7 @@ testEvalModulo9 = TestCase $ do
     a9 = Var (AstInt (-15))
     b9 = Var (AstInt 7)
     operation9 = BinaryOp Modulo a9 b9
-    result9 = Var (AstInt (-1))
+    result9 = Var (AstInt (6))
 
 testEvalModulo10 :: Test
 testEvalModulo10 = TestCase $ do
@@ -96,3 +96,22 @@ testEvalModulo10 = TestCase $ do
     b10 = Var (AstInt 11)
     operation10 = BinaryOp Modulo a10 b10
     result10 = Var (AstInt 8)
+
+testEvalModulo11 :: Test
+testEvalModulo11 = TestCase $ do
+  assertEqual "Eval Test Modulo #11" (result10) (evaluation operation10)
+  where
+    a10 = Var (AstInt 30)
+    b10 = Var (AstSymb "bad input")
+    operation10 = BinaryOp Modulo a10 b10
+    result10 = Nothing
+
+-- Modulo by Zero
+testEvalModulo12 :: Test
+testEvalModulo12 = TestCase $ do
+  assertEqual "Eval Test Modulo #12" (result10) (evaluation operation10)
+  where
+    a10 = Var (AstInt 30)
+    b10 = Var (AstInt 0)
+    operation10 = BinaryOp Modulo a10 b10
+    result10 = Nothing

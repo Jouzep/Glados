@@ -5,13 +5,12 @@ import AST.Constants
 
 evaluation :: Ast -> Maybe Ast
 evaluation (Var n) = Just (Var (n))
-evaluation (Var n) = Just (Var (n))
 evaluation (BinaryOp op args1 args2) = evalBinaryOp op args1 args2 -- Fix the pattern matching for BinaryOp
 evaluation (Cond args1 args2 args3) = evalCond args1 args2 args3
 -- evaluation (BinaryOp op args args) = evalBinaryOp op args
 -- evaluation (FunctionCall n args) = evalCallFunction n args
 -- evalAST (Call "+" args) = evalBinaryOp "+" args
-evaluation n = Just n
+evaluation _ = Nothing
 
 
 evalCond :: Ast -> Ast -> Ast -> Maybe Ast
@@ -20,7 +19,7 @@ evalCond args1 args2 args3 = do
         Just (Var (AstBool ( "#t"))) -> evaluation args2 -- A remplacer par #T
         Just (Var (AstBool ( "#f"))) -> evaluation args3 -- A remplacer par #F
         _ -> Nothing
-evalCond _ _ _ = Nothing
+-- evalCond _ _ _ = Nothing Obliger d'avoir 3 valeur dans tout les cas
 
 -- evalBinaryOp :: AstBinaryOp -> Ast -> Ast -> Maybe Ast
 -- evalBinaryOp Add ast1 ast2 = do
@@ -167,10 +166,7 @@ evalBinaryOp Or ast1 ast2 = do
             Just (Var (AstBool (if n1 == "#t" || n2 == "#t" then "#t" else "#f")))
         _ -> Nothing
 
-
--- Add more cases for other operators as needed
-
-evalBinaryOp _ _ _ = Nothing
+-- evalBinaryOp _ _ _ = Nothing Obliger d'avoir Un opérateur
 
 -- Save
 -- evalBinaryOp LessThanOrEqual ast1 ast2 = do

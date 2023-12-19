@@ -25,9 +25,10 @@ fclean: clean
 	$(RM) -rf $(NAME)-test.tix
 
 unit_tests: re
-	stack test
+	stack test --coverage
 
-coverage: unit_tests
+coverage:
+	unit_tests
 	stack hpc report --all
 
 re: fclean all

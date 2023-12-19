@@ -5,7 +5,7 @@ import AST.Constants
 import Evaluation.Evaluation (evaluation)
 
 evalSimpleLessThanTests :: Test
-evalSimpleLessThanTests = TestList [testEvalLessThan1, testEvalLessThan2, testEvalLessThan3, testEvalLessThan4, testEvalLessThan5, testEvalLessThan6, testEvalLessThan7, testEvalLessThan8, testEvalLessThan9, testEvalLessThan10]
+evalSimpleLessThanTests = TestList [testEvalLessThan1, testEvalLessThan2, testEvalLessThan3, testEvalLessThan4, testEvalLessThan5, testEvalLessThan6, testEvalLessThan7, testEvalLessThan8, testEvalLessThan9, testEvalLessThan10, testEvalLessThan11]
 
 testEvalLessThan1 :: Test
 testEvalLessThan1 = TestCase $ do
@@ -96,3 +96,12 @@ testEvalLessThan10 = TestCase $ do
     b10 = Var (AstInt 0)
     operation10 = BinaryOp LessThan a10 b10
     result10 = Var (AstBool "#f")
+
+testEvalLessThan11 :: Test
+testEvalLessThan11 = TestCase $ do
+  assertEqual "Eval Test LessThan #11" result10 (evaluation operation10)
+  where
+    a10 = Var (AstInt 0)
+    b10 = Var (AstSymb "bad input")
+    operation10 = BinaryOp LessThan a10 b10
+    result10 = Nothing

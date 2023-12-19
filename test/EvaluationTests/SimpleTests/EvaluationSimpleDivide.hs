@@ -5,7 +5,7 @@ import AST.Constants
 import Evaluation.Evaluation (evaluation)
 
 evalSimpleDivideTests :: Test
-evalSimpleDivideTests = TestList [testEvalDivide1, testEvalDivide2, testEvalDivide3, testEvalDivide4, testEvalDivide5, testEvalDivide6, testEvalDivide7, testEvalDivide8, testEvalDivide9, testEvalDivide10]
+evalSimpleDivideTests = TestList [testEvalDivide1, testEvalDivide2, testEvalDivide3, testEvalDivide4, testEvalDivide5, testEvalDivide6, testEvalDivide7, testEvalDivide8, testEvalDivide9, testEvalDivide10, testEvalDivide11]
 
 testEvalDivide1 :: Test
 testEvalDivide1 = TestCase $ do
@@ -96,3 +96,12 @@ testEvalDivide10 = TestCase $ do
     b10 = Var (AstInt 1)
     operation10 = BinaryOp Divide a10 b10
     result10 = Var (AstInt 7)
+
+testEvalDivide11 :: Test
+testEvalDivide11 = TestCase $ do
+  assertEqual "Eval Test Divide #11" (result10) (evaluation operation10)
+  where
+    a10 = Var (AstInt 7)
+    b10 = Var (AstSymb "4s")
+    operation10 = BinaryOp Divide a10 b10
+    result10 = Nothing

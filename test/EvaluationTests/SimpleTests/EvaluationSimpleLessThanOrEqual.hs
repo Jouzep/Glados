@@ -5,7 +5,7 @@ import AST.Constants
 import Evaluation.Evaluation (evaluation)
 
 evalSimpleLessThanOrEqualTests :: Test
-evalSimpleLessThanOrEqualTests = TestList [testEvalLessThanOrEqual1, testEvalLessThanOrEqual2, testEvalLessThanOrEqual3, testEvalLessThanOrEqual4, testEvalLessThanOrEqual5, testEvalLessThanOrEqual6, testEvalLessThanOrEqual7, testEvalLessThanOrEqual8, testEvalLessThanOrEqual9, testEvalLessThanOrEqual10]
+evalSimpleLessThanOrEqualTests = TestList [testEvalLessThanOrEqual1, testEvalLessThanOrEqual2, testEvalLessThanOrEqual3, testEvalLessThanOrEqual4, testEvalLessThanOrEqual5, testEvalLessThanOrEqual6, testEvalLessThanOrEqual7, testEvalLessThanOrEqual8, testEvalLessThanOrEqual9, testEvalLessThanOrEqual10, testEvalLessThanOrEqual11]
 
 testEvalLessThanOrEqual1 :: Test
 testEvalLessThanOrEqual1 = TestCase $ do
@@ -96,3 +96,12 @@ testEvalLessThanOrEqual10 = TestCase $ do
     b10 = Var (AstInt 0)
     operation10 = BinaryOp LessThanOrEqual a10 b10
     result10 = Var (AstBool "#t")
+
+testEvalLessThanOrEqual11 :: Test
+testEvalLessThanOrEqual11 = TestCase $ do
+  assertEqual "Eval Test LessThanOrEqual #11" (result10) (evaluation operation10)
+  where
+    a10 = Var (AstInt 0)
+    b10 = Var (AstSymb "bad input")
+    operation10 = BinaryOp LessThanOrEqual a10 b10
+    result10 = Nothing

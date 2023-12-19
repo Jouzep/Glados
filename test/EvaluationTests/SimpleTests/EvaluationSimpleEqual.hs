@@ -5,7 +5,7 @@ import AST.Constants
 import Evaluation.Evaluation (evaluation)
 
 evalSimpleEqualTests :: Test
-evalSimpleEqualTests = TestList [testEvalEqual1, testEvalEqual2, testEvalEqual3, testEvalEqual4, testEvalEqual5, testEvalEqual6, testEvalEqual7, testEvalEqual8, testEvalEqual9, testEvalEqual10]
+evalSimpleEqualTests = TestList [testEvalEqual1, testEvalEqual2, testEvalEqual3, testEvalEqual4, testEvalEqual5, testEvalEqual6, testEvalEqual7, testEvalEqual8, testEvalEqual9, testEvalEqual10, testEvalEqual11]
 
 testEvalEqual1 :: Test
 testEvalEqual1 = TestCase $ do
@@ -96,3 +96,12 @@ testEvalEqual10 = TestCase $ do
     b10 = Var (AstInt 0)
     operation10 = BinaryOp Equal a10 b10
     result10 = Var (AstBool "#t")
+
+testEvalEqual11 :: Test
+testEvalEqual11 = TestCase $ do
+  assertEqual "Eval Test Equal #11" (result10) (evaluation operation10)
+  where
+    a10 = Var (AstInt 0)
+    b10 = Var (AstSymb "45")
+    operation10 = BinaryOp Equal a10 b10
+    result10 = Nothing

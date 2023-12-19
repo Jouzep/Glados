@@ -5,7 +5,7 @@ import AST.Constants
 import Evaluation.Evaluation (evaluation)
 
 evalSimpleGreaterThanOrEqualTests :: Test
-evalSimpleGreaterThanOrEqualTests = TestList [testEvalGreaterThanOrEqual1, testEvalGreaterThanOrEqual2, testEvalGreaterThanOrEqual3, testEvalGreaterThanOrEqual4, testEvalGreaterThanOrEqual5, testEvalGreaterThanOrEqual6, testEvalGreaterThanOrEqual7, testEvalGreaterThanOrEqual8, testEvalGreaterThanOrEqual9, testEvalGreaterThanOrEqual10]
+evalSimpleGreaterThanOrEqualTests = TestList [testEvalGreaterThanOrEqual1, testEvalGreaterThanOrEqual2, testEvalGreaterThanOrEqual3, testEvalGreaterThanOrEqual4, testEvalGreaterThanOrEqual5, testEvalGreaterThanOrEqual6, testEvalGreaterThanOrEqual7, testEvalGreaterThanOrEqual8, testEvalGreaterThanOrEqual9, testEvalGreaterThanOrEqual10, testEvalGreaterThanOrEqual11]
 
 testEvalGreaterThanOrEqual1 :: Test
 testEvalGreaterThanOrEqual1 = TestCase $ do
@@ -96,3 +96,12 @@ testEvalGreaterThanOrEqual10 = TestCase $ do
     b10 = Var (AstInt 0)
     operation10 = BinaryOp GreaterThanOrEqual a10 b10
     result10 = Var (AstBool "#t")
+
+testEvalGreaterThanOrEqual11 :: Test
+testEvalGreaterThanOrEqual11 = TestCase $ do
+  assertEqual "Eval Test GreaterThanOrEqual #11" (result10) (evaluation operation10)
+  where
+    a10 = Var (AstInt 0)
+    b10 = Var (AstSymb "1")
+    operation10 = BinaryOp GreaterThanOrEqual a10 b10
+    result10 = Nothing

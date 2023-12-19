@@ -5,7 +5,7 @@ import AST.Constants
 import Evaluation.Evaluation (evaluation)
 
 evalSimpleMultiplyTests :: Test
-evalSimpleMultiplyTests = TestList [testEvalMultiply1, testEvalMultiply2, testEvalMultiply3, testEvalMultiply4, testEvalMultiply5, testEvalMultiply6, testEvalMultiply7, testEvalMultiply8, testEvalMultiply9, testEvalMultiply10]
+evalSimpleMultiplyTests = TestList [testEvalMultiply1, testEvalMultiply2, testEvalMultiply3, testEvalMultiply4, testEvalMultiply5, testEvalMultiply6, testEvalMultiply7, testEvalMultiply8, testEvalMultiply9, testEvalMultiply10, testEvalMultiply11]
 
 testEvalMultiply1 :: Test
 testEvalMultiply1 = TestCase $ do
@@ -96,3 +96,12 @@ testEvalMultiply10 = TestCase $ do
     b10 = Var (AstInt 11)
     operation10 = BinaryOp Multiply a10 b10
     result10 = Var (AstInt 330)
+
+testEvalMultiply11 :: Test
+testEvalMultiply11 = TestCase $ do
+  assertEqual "Eval Test Multiply #11" ( result10) (evaluation operation10)
+  where
+    a10 = Var (AstInt 30)
+    b10 = Var (AstSymb "4")
+    operation10 = BinaryOp Multiply a10 b10
+    result10 = Nothing

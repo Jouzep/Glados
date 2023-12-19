@@ -5,12 +5,7 @@ import AST.Constants
 import Evaluation.Evaluation (evaluation)
 
 evalSimpleSubTests :: Test
-evalSimpleSubTests = TestList
-  [ testEvalSub1, testEvalSub2, testEvalSub3
-  , testEvalSub4, testEvalSub5, testEvalSub6
-  , testEvalSub7, testEvalSub8, testEvalSub9
-  , testEvalSub10
-  ]
+evalSimpleSubTests = TestList[ testEvalSub1, testEvalSub2, testEvalSub3, testEvalSub4, testEvalSub5, testEvalSub6, testEvalSub7, testEvalSub8, testEvalSub9, testEvalSub10, testEvalSub11]
 
 testEvalSub1 :: Test
 testEvalSub1 = TestCase $ do
@@ -101,3 +96,12 @@ testEvalSub10 = TestCase $ do
     b10 = Var (AstInt 2)
     operation10 = BinaryOp Sub a10 b10
     result10 = Var (AstInt 5)
+
+testEvalSub11 :: Test
+testEvalSub11 = TestCase $ do
+  assertEqual "Eval Test Sub #11" ( result10) (evaluation operation10)
+  where
+    a10 = Var (AstInt 7)
+    b10 = Var (AstSymb "bad input")
+    operation10 = BinaryOp Sub a10 b10
+    result10 = Nothing

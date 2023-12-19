@@ -14,6 +14,7 @@ import EvaluationTests.SimpleTests.EvaluationSimpleGreaterThan
 import EvaluationTests.SimpleTests.EvaluationSimpleGreaterThanOrEqual
 import EvaluationTests.SimpleTests.EvaluationSimpleAnd
 import EvaluationTests.SimpleTests.EvaluationSimpleOr
+import EvaluationTests.SimpleTests.EvaluationSimpleCond
 
 evalSimpleTestList :: Test
 evalSimpleTestList = 
@@ -31,5 +32,7 @@ evalSimpleTestList =
         evalSimpleMultiplyTests,
         evalSimpleNotEqualTests,
         evalSimpleOrTests,
-        evalSimpleSubTests
+        evalSimpleSubTests,
+
+        evalSimpleCondTests
     ]
