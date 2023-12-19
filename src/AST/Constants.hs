@@ -6,7 +6,7 @@ data SExpr
     = SInt Int
     | SSymb String
     | SList [SExpr]
-    deriving Show
+    deriving (Show, Eq)
 
 data Ast
     = Var AstConstant
@@ -14,13 +14,18 @@ data Ast
     | Define String Ast
     | Cond Ast Ast Ast
     | BinaryOp AstBinaryOp Ast Ast
-    deriving Show
+    deriving (Show, Eq)
 
 data AstConstant
     = AstInt Int
     | AstSymb String
-    | AstBool Bool
-    deriving Show
+    | AstBool String
+    deriving (Show, Eq)
+
+-- data MyBool 
+--     = #t
+--     | #f
+--     deriving (Show, Eq)
 
 data AstBinaryOp
     = Add
@@ -36,4 +41,4 @@ data AstBinaryOp
     | GreaterThanOrEqual
     | And
     | Or
-    deriving Show
+    deriving (Show, Eq)

@@ -23,12 +23,11 @@ fclean: clean
 	$(RM) -rf .hpc
 	$(RM) -rf $(NAME).cabal
 	$(RM) -rf $(NAME)-test.tix
-	
 
-unit_tests:
-	stack test --coverage
+unit_tests: re
+	stack test
 
-coverage:
+coverage: unit_tests
 	stack hpc report --all
 
 re: fclean all
