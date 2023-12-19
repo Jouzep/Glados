@@ -150,15 +150,23 @@ evalBinaryOp GreaterThanOrEqual ast1 ast2 = do
         (Just (Var (AstInt n1)), Just (Var (AstInt n2))) -> Just (Var (AstBool (if n1 >= n2 then "#t" else "#f")))
         _ -> Nothing
 
+-- evalBinaryOp And ast1 ast2 = do
+--     case (evaluation ast1, evaluation ast2) of
+--         (Just (Var (AstInt n1)), Just (Var (AstInt n2))) -> Just (Var (AstBool (if n1 /= 0 && n2 /= 0 then "#t" else "#f")))
+--         _ -> Nothing
+
 evalBinaryOp And ast1 ast2 = do
     case (evaluation ast1, evaluation ast2) of
-        (Just (Var (AstInt n1)), Just (Var (AstInt n2))) -> Just (Var (AstBool (if n1 /= 0 && n2 /= 0 then "#t" else "#f")))
+        (Just (Var (AstBool n1)), Just (Var (AstBool n2))) ->
+            Just (Var (AstBool (if n1 == "#t" && n2 == "#t" then "#t" else "#f")))
         _ -> Nothing
 
 evalBinaryOp Or ast1 ast2 = do
     case (evaluation ast1, evaluation ast2) of
-        (Just (Var (AstInt n1)), Just (Var (AstInt n2))) -> Just (Var (AstBool (if n1 /= 0 || n2 /= 0 then "#t" else "#f")))
+        (Just (Var (AstBool n1)), Just (Var (AstBool n2))) ->
+            Just (Var (AstBool (if n1 == "#t" || n2 == "#t" then "#t" else "#f")))
         _ -> Nothing
+
 
 -- Add more cases for other operators as needed
 
