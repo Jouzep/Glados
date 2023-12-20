@@ -17,8 +17,8 @@ import EvaluationTests.SimpleTests.EvaluationSimpleOr
 import EvaluationTests.SimpleTests.EvaluationSimpleCond
 
 evalSimpleTestList :: Test
-evalSimpleTestList = 
-    TestList 
+evalSimpleTestList =
+    TestList
     [
         evalSimpleAddTests,
         evalSimpleAndTests,
