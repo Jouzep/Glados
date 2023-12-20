@@ -1,7 +1,7 @@
 module AST.Constants (
   module AST.Constants
 ) where
-    
+
 data SExpr
     = SInt Int
     | SSymb String
@@ -10,10 +10,12 @@ data SExpr
 
 data Ast
     = Var AstConstant
-    | FunctionCall String [Ast]
-    | Define String Ast
-    | Cond Ast Ast Ast
-    | BinaryOp AstBinaryOp Ast Ast
+    | Define
+    | If
+    | BinaryOp AstBinaryOp
+    | FunctionCall
+    | Lambda
+    | ListOfAst [Ast]
     deriving (Show, Eq)
 
 data AstConstant
@@ -22,11 +24,6 @@ data AstConstant
     | AstSymb String
     | AstBool String
     deriving (Show, Eq)
-
--- data MyBool 
---     = #t
---     | #f
---     deriving (Show, Eq)
 
 data AstBinaryOp
     = Add
