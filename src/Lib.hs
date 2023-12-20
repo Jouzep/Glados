@@ -1,26 +1,13 @@
 module Lib
-    ( someFunc,
-    add,
-    SExpr (IntExpression, SymbolExpression, ListExpress),
-    parseSExpr,
+    (parseSExpr,
     parseList,
     ) where
 
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
-
-add :: Int -> Int -> Int
-add x y = x + y
+import AST.Constants
 
 -- PARSER
 
 type Parser a = String -> Maybe (a, String)
-
-data SExpr
-    = IntExpression Int
-    | SymbolExpression String
-    | ListExpress [SExpr]
-    deriving Show
 
 parseChar :: Char -> Parser Char
 parseChar c (x : xs) | c == x = Just (c, xs)
@@ -85,13 +72,13 @@ _ = Nothing
 parseSExpr :: Parser SExpr
 parseSExpr input =
   case parseInt input of
-    Just (result, rest) -> Just (IntExpression result, rest)
+    Just (result, rest) -> Just (SInt result, rest)
     Nothing ->
-      case parseSome (parseAnyChar (['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ "+*-/%=<>&|")) input of
-        Just (result, rest) -> Just (SymbolExpression result, rest)
+      case parseSome (parseAnyChar (['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ "+*-/%=<>&|#")) input of
+        Just (result, rest) -> Just (SSymb result, rest)
         Nothing ->
           case parseList parseSExpr input of
-            Just (result, rest) -> Just (ListExpress result, rest)
+            Just (result, rest) -> Just (SList result, rest)
             Nothing -> Nothing
 
 parseInt :: Parser Int -- parse a signed Int

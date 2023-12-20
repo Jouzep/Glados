@@ -1,24 +1,36 @@
 module Main (main) where
 
-import System.Exit (exitSuccess, exitWith, ExitCode(..))
-import Data.IORef
-import Evaluation.Evaluation (evaluation)
-import AST.Constants
+import Control.Exception (catch, IOException)
+import AST.Constants()
+import Parser.Parser
+import AST.Tree.ConvertToAst
+import Evaluation.Evaluation
 import AST.Env
+import Lib()
+
+processInput :: String -> AST.Env.Env -> IO ()
+processInput "exit" _ = return ()
+processInput input myEnv = case parser input of
+    Just sexpr -> do
+        let ast = convertSExprToAst sexpr
+        let (eval, newEnv) = evaluation ast myEnv
+        print eval
+        _ <- loopInput newEnv
+        return ()
+    Nothing -> do
+        putStrLn "Invalid input"
+        _ <- loopInput myEnv
+        return ()
+
+loopInput :: Env -> IO ()
+loopInput myEnv = do
+    result <- catch getLine handleEOF
+    processInput result myEnv
+    where
+        handleEOF :: IOException -> IO String
+        handleEOF _ = return "exit"
 
 main :: IO ()
 main = do
-    let a = Var (AstInt 5)
-    let e = Var (AstSymb "a")
-    let operation = Define "a" (Var (AstInt 5))
     let myEnv = createEnv
-    let (b, myEnv1) = evaluation operation myEnv
-    putStrLn(show (b))
-    printEnv myEnv1
-    let operation1 = BinaryOp Add a e
-    let (b1, myEnv2) = evaluation operation1 myEnv1
-    putStrLn(show (b1))
-    printEnv myEnv2
-    case b1 of
-        Just result -> putStrLn (show (Just result)) >>  exitSuccess
-        Nothing -> putStrLn "Failed" >> exitWith (ExitFailure 84)
+    loopInput myEnv

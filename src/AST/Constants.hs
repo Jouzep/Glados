@@ -1,6 +1,4 @@
-module AST.Constants (
-  module AST.Constants
-) where
+module AST.Constants (SExpr(..), Ast(..), AstConstant(..), AstBinaryOp(..)) where
 
 data SExpr
     = SInt Int
