@@ -9,4 +9,6 @@ parser :: String -> Maybe SExpr
 parser s =
   case parseList parseSExpr s of
     Just (result, _) -> Just (SList result)
-    Nothing -> Nothing
+    Nothing -> case parseSExpr s of
+      Just (result, _) -> Just result
+      Nothing -> Nothing

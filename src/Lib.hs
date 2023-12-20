@@ -112,7 +112,10 @@ parseList :: Parser a -> Parser [a] -- parse a list
 parseList parser input =
   case parseChar '(' input of
     Just (_, rest) ->
-      case parseMany (parseAndWith const parser (parseChar ' ' `parseOr` parseChar ')')) rest of
-        Just (results, rest') -> Just (results, rest')
+      case parseMany (parseAndWith const parser (parseMany (parseChar ' ' `parseOr` parseChar '\n' `parseOr` parseChar '\t'))) rest of
+        Just (results, rest') -> case parseMany (parseAndWith const (parseChar ')') (parseMany (parseChar ' ' `parseOr` parseChar '\n' `parseOr` parseChar '\t'))) rest' of
+            Just (_, rest'') -> Just (results, rest'')
+            Nothing -> Nothing
+        Nothing -> Nothing
     Nothing -> Nothing
 _ = Nothing
