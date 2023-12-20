@@ -21,7 +21,7 @@ evalVarCall name myEnv = do
             let (result, _) =  (evaluation ast myEnv)
             result
         _ -> Nothing
-        
+
 evalFunctionCall :: String -> [Ast] -> Env -> Maybe Ast
 evalFunctionCall name args myEnv = do
     case getEnv myEnv name of
