@@ -2,7 +2,7 @@ name: Glados CD
 
 on:
   workflow_run:
-    workflows: ["Glados CI", "Check Release Existence"]
+    workflows: ["Glados CI"]
     branches: [main]
     types:
       - completed

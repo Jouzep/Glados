@@ -11,7 +11,7 @@ on:
       - dev
 
 env:
-  EXECUTABLES: "Glados"
+  EXECUTABLES: "glados"
 
 jobs:
   check_repository_is_clean:
