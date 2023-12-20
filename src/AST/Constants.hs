@@ -20,6 +20,7 @@ data Ast
 
 data AstConstant
     = AstInt Int
+    -- | AstList [Ast]
     | AstSymb String
     | AstBool String
     deriving (Show, Eq)

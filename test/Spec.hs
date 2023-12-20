@@ -1,14 +1,12 @@
 import Test.HUnit
 
-import AstTest
-import ParserTest
-
+import EvaluationTests.SimpleTests.EvaluationSimpleTests
 
 -- Combine all test cases
 allTests :: Test
 allTests = TestList
-  [ TestLabel "Ast tests" $ astTests
-  , TestLabel "Parser tests" $ parserTests
+  [ 
+    TestLabel "Evaluation Operator Simple tests" $ evalSimpleTestList
   ]
 
 -- Main function to run all the defined tests
