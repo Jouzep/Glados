@@ -3,105 +3,116 @@ module EvaluationTests.SimpleTests.EvaluationSimpleLessThanOrEqual (evalSimpleLe
 import Test.HUnit
 import AST.Constants
 import Evaluation.Evaluation (evaluation)
-
+import AST.Env
 evalSimpleLessThanOrEqualTests :: Test
 evalSimpleLessThanOrEqualTests = TestList [testEvalLessThanOrEqual1, testEvalLessThanOrEqual2, testEvalLessThanOrEqual3, testEvalLessThanOrEqual4, testEvalLessThanOrEqual5, testEvalLessThanOrEqual6, testEvalLessThanOrEqual7, testEvalLessThanOrEqual8, testEvalLessThanOrEqual9, testEvalLessThanOrEqual10, testEvalLessThanOrEqual11]
 
 testEvalLessThanOrEqual1 :: Test
 testEvalLessThanOrEqual1 = TestCase $ do
-  assertEqual "Eval Test LessThanOrEqual #1" (Just result1) (evaluation operation1)
+  let (result, _) = evaluation operation createEnv
+  assertEqual "Eval Test LessThanOrEqual #1" (Just expected) (result)
   where
-    a1 = Var (AstInt 5)
-    b1 = Var (AstInt 5)
-    operation1 = BinaryOp LessThanOrEqual a1 b1
-    result1 = Var (AstBool "#t")
+    a = Var (AstInt 5)
+    b = Var (AstInt 5)
+    operation = BinaryOp LessThanOrEqual a b
+    expected = Var (AstBool "#t")
 
 testEvalLessThanOrEqual2 :: Test
 testEvalLessThanOrEqual2 = TestCase $ do
-  assertEqual "Eval Test LessThanOrEqual #2" (Just result2) (evaluation operation2)
+  let (result, _) = evaluation operation createEnv
+  assertEqual "Eval Test LessThanOrEqual #2" (Just expected) (result)
   where
-    a2 = Var (AstInt 0)
-    b2 = Var (AstInt 8)
-    operation2 = BinaryOp LessThanOrEqual a2 b2
-    result2 = Var (AstBool "#t")
+    a = Var (AstInt 0)
+    b = Var (AstInt 8)
+    operation = BinaryOp LessThanOrEqual a b
+    expected = Var (AstBool "#t")
 
 testEvalLessThanOrEqual3 :: Test
 testEvalLessThanOrEqual3 = TestCase $ do
-  assertEqual "Eval Test LessThanOrEqual #3" (Just result3) (evaluation operation3)
+  let (result, _) = evaluation operation createEnv
+  assertEqual "Eval Test LessThanOrEqual #3" (Just expected) (result)
   where
-    a3 = Var (AstInt (-3))
-    b3 = Var (AstInt 7)
-    operation3 = BinaryOp LessThanOrEqual a3 b3
-    result3 = Var (AstBool "#t")
+    a = Var (AstInt (-3))
+    b = Var (AstInt 7)
+    operation = BinaryOp LessThanOrEqual a b
+    expected = Var (AstBool "#t")
 
 testEvalLessThanOrEqual4 :: Test
 testEvalLessThanOrEqual4 = TestCase $ do
-  assertEqual "Eval Test LessThanOrEqual #4" (Just result4) (evaluation operation4)
+  let (result, _) = evaluation operation createEnv
+  assertEqual "Eval Test LessThanOrEqual #4" (Just expected) (result)
   where
-    a4 = Var (AstInt 100)
-    b4 = Var (AstInt (-50))
-    operation4 = BinaryOp LessThanOrEqual a4 b4
-    result4 = Var (AstBool "#f")
+    a = Var (AstInt 100)
+    b = Var (AstInt (-50))
+    operation = BinaryOp LessThanOrEqual a b
+    expected = Var (AstBool "#f")
 
 testEvalLessThanOrEqual5 :: Test
 testEvalLessThanOrEqual5 = TestCase $ do
-  assertEqual "Eval Test LessThanOrEqual #5" (Just result5) (evaluation operation5)
+  let (result, _) = evaluation operation createEnv
+  assertEqual "Eval Test LessThanOrEqual #5" (Just expected) (result)
   where
-    a5 = Var (AstInt 0)
-    b5 = Var (AstInt 0)
-    operation5 = BinaryOp LessThanOrEqual a5 b5
-    result5 = Var (AstBool "#t")
+    a = Var (AstInt 0)
+    b = Var (AstInt 0)
+    operation = BinaryOp LessThanOrEqual a b
+    expected = Var (AstBool "#t")
 
 testEvalLessThanOrEqual6 :: Test
 testEvalLessThanOrEqual6 = TestCase $ do
-  assertEqual "Eval Test LessThanOrEqual #6" (Just result6) (evaluation operation6)
+  let (result, _) = evaluation operation createEnv
+  assertEqual "Eval Test LessThanOrEqual #6" (Just expected) (result)
   where
-    a6 = Var (AstInt 1)
-    b6 = Var (AstInt 1)
-    operation6 = BinaryOp LessThanOrEqual a6 b6
-    result6 = Var (AstBool "#t")
+    a = Var (AstInt 1)
+    b = Var (AstInt 1)
+    operation = BinaryOp LessThanOrEqual a b
+    expected = Var (AstBool "#t")
 
 testEvalLessThanOrEqual7 :: Test
 testEvalLessThanOrEqual7 = TestCase $ do
-  assertEqual "Eval Test LessThanOrEqual #7" (Just result7) (evaluation operation7)
+  let (result, _) = evaluation operation createEnv
+  assertEqual "Eval Test LessThanOrEqual #7" (Just expected) (result)
   where
-    a7 = Var (AstInt (-5))
-    b7 = Var (AstInt 0)
-    operation7 = BinaryOp LessThanOrEqual a7 b7
-    result7 = Var (AstBool "#t")
+    a = Var (AstInt (-5))
+    b = Var (AstInt 0)
+    operation = BinaryOp LessThanOrEqual a b
+    expected = Var (AstBool "#t")
 
 testEvalLessThanOrEqual8 :: Test
 testEvalLessThanOrEqual8 = TestCase $ do
-  assertEqual "Eval Test LessThanOrEqual #8" (Just result8) (evaluation operation8)
+  let (result, _) = evaluation operation createEnv
+  assertEqual "Eval Test LessThanOrEqual #8" (Just expected) (result)
   where
-    a8 = Var (AstInt 10)
-    b8 = Var (AstInt 20)
-    operation8 = BinaryOp LessThanOrEqual a8 b8
-    result8 = Var (AstBool "#t")
+    a = Var (AstInt 10)
+    b = Var (AstInt 20)
+    operation = BinaryOp LessThanOrEqual a b
+    expected = Var (AstBool "#t")
 
 testEvalLessThanOrEqual9 :: Test
 testEvalLessThanOrEqual9 = TestCase $ do
-  assertEqual "Eval Test LessThanOrEqual #9" (Just result9) (evaluation operation9)
+  let (result, _) = evaluation operation createEnv
+  assertEqual "Eval Test LessThanOrEqual #9" (Just expected) (result)
   where
-    a9 = Var (AstInt (-2))
-    b9 = Var (AstInt 2)
-    operation9 = BinaryOp LessThanOrEqual a9 b9
-    result9 = Var (AstBool "#t")
+    a = Var (AstInt (-2))
+    b = Var (AstInt 2)
+    operation = BinaryOp LessThanOrEqual a b
+    expected = Var (AstBool "#t")
 
 testEvalLessThanOrEqual10 :: Test
 testEvalLessThanOrEqual10 = TestCase $ do
-  assertEqual "Eval Test LessThanOrEqual #10" (Just result10) (evaluation operation10)
+  let (result, _) = evaluation operation createEnv
+  assertEqual "Eval Test LessThanOrEqual #10" (Just expected) (result)
   where
-    a10 = Var (AstInt 0)
-    b10 = Var (AstInt 0)
-    operation10 = BinaryOp LessThanOrEqual a10 b10
-    result10 = Var (AstBool "#t")
+    a = Var (AstInt 0)
+    b = Var (AstInt 0)
+    operation = BinaryOp LessThanOrEqual a b
+    expected = Var (AstBool "#t")
 
 testEvalLessThanOrEqual11 :: Test
 testEvalLessThanOrEqual11 = TestCase $ do
-  assertEqual "Eval Test LessThanOrEqual #11" (result10) (evaluation operation10)
+  let (result, _) = evaluation operation createEnv
+  assertEqual "Eval Test LessThanOrEqual #11" (expected) (result)
   where
-    a10 = Var (AstInt 0)
-    b10 = Var (AstSymb "bad input")
-    operation10 = BinaryOp LessThanOrEqual a10 b10
-    result10 = Nothing
+    a = Var (AstInt 0)
+    b = Var (AstSymb "bad input")
+    operation = BinaryOp LessThanOrEqual a b
+    expected = Nothing
