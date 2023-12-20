@@ -1,4 +1,3 @@
--- test/OtherTests.hs
 
 module ParserTest (parserTests) where
 import Test.HUnit

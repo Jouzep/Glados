@@ -5,7 +5,7 @@
 ## Makefile
 ##
 
-NAME = Glados
+NAME = glados
 
 all:
 	 stack build
@@ -27,8 +27,9 @@ fclean: clean
 unit_tests: re
 	stack test --coverage
 
+
 coverage: unit_tests
-	stack hpc report --all
+  stack hpc report --all
 
 re: fclean all
 

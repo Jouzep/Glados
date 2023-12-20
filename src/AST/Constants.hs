@@ -1,6 +1,4 @@
-module AST.Constants (
-  module AST.Constants
-) where
+module AST.Constants (SExpr(..), Ast(..), AstConstant(..), AstBinaryOp(..)) where
 
 data SExpr
     = SInt Int
@@ -20,6 +18,7 @@ data Ast
 
 data AstConstant
     = AstInt Int
+    -- | AstList [Ast]
     | AstSymb String
     | AstBool String
     deriving (Show, Eq)
