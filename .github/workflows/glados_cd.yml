@@ -45,14 +45,14 @@ jobs:
           echo "Release version $package_version"
           echo "PACKAGE_VERSION=$package_version" >> $GITHUB_ENV
 
-      - name: Move and rename file
-        run: mv ${{ env.tar }} "glados-v${{ env.PACKAGE_VERSION }}.tar.gz"
+      # - name: Move and rename file
+      #   run: mv ${{ env.tar }} "glados-v${{ env.PACKAGE_VERSION }}.tar.gz"
 
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ env.PACKAGE_VERSION }}
-          artifacts: "./glados-v${{ env.PACKAGE_VERSION }}.tar.gz"
+          artifacts: "glados.tar.gz"
           artifactContentType: "application/gzip"
           allowUpdates: true
           token: ${{ github.token }}
