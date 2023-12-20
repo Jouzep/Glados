@@ -1,5 +1,6 @@
 module AST.Tree.ConvertToAst (
     convertSExprToAst,
+    stringToBinaryOp
 ) where
 
 import AST.Constants
