@@ -11,6 +11,7 @@ data Ast
     | Define
     | If
     | BinaryOp AstBinaryOp
+    | Func Ast Ast
     | FunctionCall
     | Lambda
     | ListOfAst [Ast]

@@ -12,6 +12,9 @@ evaluation (ListOfAst (If:cond:thens:elsee:xs)) myEnv = (evalCond cond thens els
 evaluation (ListOfAst (Define:(Var (AstSymb (name))):value:xs)) myEnv = (Just (ListOfAst (Define:(Var (AstSymb (name))):value:xs)), pushEnv myEnv name value)
 evaluation (ListOfAst []) myEnv = (Nothing, myEnv)
 
+evaluation (ListOfAst (Define:ListOfAst ((Var (AstSymb name): rest)):xs)) myEnv = (Just (ListOfAst (Define:ListOfAst ((Var (AstSymb name): rest)):xs)), pushEnv myEnv name (Func (ListOfAst rest) (ListOfAst xs)))
+evaluation (ListOfAst (FunctionCall:(Var (AstSymb name)):args)) myEnv = (evalFunctionCall name args myEnv, myEnv)
+evaluation _ myEnv = (Nothing, myEnv)
 -- evaluation (Var (AstSymb name)) myEnv = (evalVarCall name myEnv, myEnv)
 
 -- evaluation (Var n) myEnv = (Just (Var n), myEnv)
@@ -19,8 +22,6 @@ evaluation (ListOfAst []) myEnv = (Nothing, myEnv)
 -- evaluation (Define name value) myEnv = (Just (Define name value), pushEnv myEnv name value)
 
 -- evaluation (BinaryOp op args1 args2) myEnv = (evalBinaryOp op args1 args2 myEnv, myEnv)
-
--- evaluation (Cond args1 args2 args3) myEnv = (evalCond args1 args2 args3 myEnv, myEnv)
 
 -- -- evaluation (FunctionCall name args) myEnv = (Just (FunctionCall name args), myEnv)
 
@@ -35,7 +36,7 @@ evalVarCall name myEnv = do
             result
         _ -> Nothing
 
-evalFunctionCall :: String -> [Ast] -> Env -> Maybe Ast
+evalFunctionCall :: String -> [Ast] -> Env -> Maybe Ast 
 evalFunctionCall name args myEnv = do
     case getEnv myEnv name of
         Just (ast) -> do
