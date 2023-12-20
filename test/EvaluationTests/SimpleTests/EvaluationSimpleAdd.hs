@@ -14,7 +14,7 @@ testEvalAdd1 = TestCase $ do
   where
     a = Var (AstInt 5)
     b = Var (AstInt 5)
-    operation = BinaryOp Add a b
+    operation = ListOfAst [BinaryOp Add, a, b]
     expected = Var (AstInt 10)
 
 testEvalAdd2 :: Test
@@ -24,7 +24,7 @@ testEvalAdd2 = TestCase $ do
   where
     a = Var (AstInt 0)
     b = Var (AstInt 8)
-    operation = BinaryOp Add a b
+    operation = ListOfAst [BinaryOp Add, a, b]
     expected = Var (AstInt 8)
 
 testEvalAdd3 :: Test
@@ -34,7 +34,7 @@ testEvalAdd3 = TestCase $ do
   where
     a = Var (AstInt (-3))
     b = Var (AstInt 7)
-    operation = BinaryOp Add a b
+    operation = ListOfAst [BinaryOp Add, a, b]
     expected = Var (AstInt 4)
 
 testEvalAdd4 :: Test
@@ -44,7 +44,7 @@ testEvalAdd4 = TestCase $ do
   where
     a = Var (AstInt 100)
     b = Var (AstInt (-50))
-    operation = BinaryOp Add a b
+    operation = ListOfAst [BinaryOp Add, a, b]
     expected = Var (AstInt 50)
 
 testEvalAdd5 :: Test
@@ -54,7 +54,7 @@ testEvalAdd5 = TestCase $ do
   where
     a = Var (AstInt 0)
     b = Var (AstInt 0)
-    operation = BinaryOp Add a b
+    operation = ListOfAst [BinaryOp Add, a, b]
     expected = Var (AstInt 0)
 
 testEvalAdd6 :: Test
@@ -64,7 +64,7 @@ testEvalAdd6 = TestCase $ do
   where
     a = Var (AstInt 25)
     b = Var (AstInt 5)
-    operation = BinaryOp Add a b
+    operation = ListOfAst [BinaryOp Add, a, b]
     expected = Var (AstInt 30)
 
 testEvalAdd7 :: Test
@@ -74,7 +74,7 @@ testEvalAdd7 = TestCase $ do
   where
     a = Var (AstInt (-30))
     b = Var (AstInt 10)
-    operation = BinaryOp Add a b
+    operation = ListOfAst [BinaryOp Add, a, b]
     expected = Var (AstInt (-20))
 
 testEvalAdd8 :: Test
@@ -84,7 +84,7 @@ testEvalAdd8 = TestCase $ do
   where
     a = Var (AstInt 64)
     b = Var (AstInt 8)
-    operation = BinaryOp Add a b
+    operation = ListOfAst [BinaryOp Add, a, b]
     expected = Var (AstInt 72)
 
 testEvalAdd9 :: Test
@@ -94,7 +94,7 @@ testEvalAdd9 = TestCase $ do
   where
     a = Var (AstInt 20)
     b = Var (AstInt (-2))
-    operation = BinaryOp Add a b
+    operation = ListOfAst [BinaryOp Add, a, b]
     expected = Var (AstInt 18)
 
 testEvalAdd10 :: Test
@@ -104,7 +104,7 @@ testEvalAdd10 = TestCase $ do
   where
     a = Var (AstInt 7)
     b = Var (AstInt 1)
-    operation = BinaryOp Add a b
+    operation = ListOfAst [BinaryOp Add, a, b]
     expected = Var (AstInt 8)
 
 testEvalAdd11 :: Test
@@ -114,5 +114,5 @@ testEvalAdd11 = TestCase $ do
   where
     a = Var (AstInt 7)
     b = Var (AstSymb "4")
-    operation = BinaryOp Add a b
+    operation = ListOfAst [BinaryOp Add, a, b]
     expected = Nothing

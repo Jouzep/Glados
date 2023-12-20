@@ -14,7 +14,7 @@ testEvalNotEqual1 = TestCase $ do
   where
     a = Var (AstInt 5)
     b = Var (AstInt 2)
-    operation = BinaryOp NotEqual a b
+    operation = ListOfAst [BinaryOp NotEqual, a, b]
     expected = Var (AstBool "#t")
 
 testEvalNotEqual2 :: Test
@@ -24,7 +24,7 @@ testEvalNotEqual2 = TestCase $ do
   where
     a = Var (AstInt 8)
     b = Var (AstInt 8)
-    operation = BinaryOp NotEqual a b
+    operation = ListOfAst [BinaryOp NotEqual, a, b]
     expected = Var (AstBool "#f")
 
 testEvalNotEqual3 :: Test
@@ -34,7 +34,7 @@ testEvalNotEqual3 = TestCase $ do
   where
     a = Var (AstInt (-10))
     b = Var (AstInt 4)
-    operation = BinaryOp NotEqual a b
+    operation = ListOfAst [BinaryOp NotEqual, a, b]
     expected = Var (AstBool "#t")
 
 testEvalNotEqual4 :: Test
@@ -44,7 +44,7 @@ testEvalNotEqual4 = TestCase $ do
   where
     a = Var (AstInt 100)
     b = Var (AstInt (-100))
-    operation = BinaryOp NotEqual a b
+    operation = ListOfAst [BinaryOp NotEqual, a, b]
     expected = Var (AstBool "#t")
 
 testEvalNotEqual5 :: Test
@@ -54,7 +54,7 @@ testEvalNotEqual5 = TestCase $ do
   where
     a = Var (AstInt 0)
     b = Var (AstInt 0)
-    operation = BinaryOp NotEqual a b
+    operation = ListOfAst [BinaryOp NotEqual, a, b]
     expected = Var (AstBool "#f")
 
 testEvalNotEqual6 :: Test
@@ -64,7 +64,7 @@ testEvalNotEqual6 = TestCase $ do
   where
     a = Var (AstInt 15)
     b = Var (AstInt 15)
-    operation = BinaryOp NotEqual a b
+    operation = ListOfAst [BinaryOp NotEqual, a, b]
     expected = Var (AstBool "#f")
 
 testEvalNotEqual7 :: Test
@@ -74,7 +74,7 @@ testEvalNotEqual7 = TestCase $ do
   where
     a = Var (AstInt (-5))
     b = Var (AstInt 3)
-    operation = BinaryOp NotEqual a b
+    operation = ListOfAst [BinaryOp NotEqual, a, b]
     expected = Var (AstBool "#t")
 
 testEvalNotEqual8 :: Test
@@ -84,7 +84,7 @@ testEvalNotEqual8 = TestCase $ do
   where
     a = Var (AstInt 23)
     b = Var (AstInt 9)
-    operation = BinaryOp NotEqual a b
+    operation = ListOfAst [BinaryOp NotEqual, a, b]
     expected = Var (AstBool "#t")
 
 testEvalNotEqual9 :: Test
@@ -94,7 +94,7 @@ testEvalNotEqual9 = TestCase $ do
   where
     a = Var (AstInt (-15))
     b = Var (AstInt 7)
-    operation = BinaryOp NotEqual a b
+    operation = ListOfAst [BinaryOp NotEqual, a, b]
     expected = Var (AstBool "#t")
 
 testEvalNotEqual10 :: Test
@@ -104,7 +104,7 @@ testEvalNotEqual10 = TestCase $ do
   where
     a = Var (AstInt 30)
     b = Var (AstInt 11)
-    operation = BinaryOp NotEqual a b
+    operation = ListOfAst [BinaryOp NotEqual, a, b]
     expected = Var (AstBool "#t")
 
 testEvalNotEqual11 :: Test
@@ -114,5 +114,5 @@ testEvalNotEqual11 = TestCase $ do
   where
     a = Var (AstInt 30)
     b = Var (AstSymb "bad input")
-    operation = BinaryOp NotEqual a b
+    operation = ListOfAst [BinaryOp NotEqual, a, b]
     expected = Nothing

@@ -14,7 +14,7 @@ testEvalLessThanOrEqual1 = TestCase $ do
   where
     a = Var (AstInt 5)
     b = Var (AstInt 5)
-    operation = BinaryOp LessThanOrEqual a b
+    operation = ListOfAst [BinaryOp LessThanOrEqual, a, b]
     expected = Var (AstBool "#t")
 
 testEvalLessThanOrEqual2 :: Test
@@ -24,7 +24,7 @@ testEvalLessThanOrEqual2 = TestCase $ do
   where
     a = Var (AstInt 0)
     b = Var (AstInt 8)
-    operation = BinaryOp LessThanOrEqual a b
+    operation = ListOfAst [BinaryOp LessThanOrEqual, a, b]
     expected = Var (AstBool "#t")
 
 testEvalLessThanOrEqual3 :: Test
@@ -34,7 +34,7 @@ testEvalLessThanOrEqual3 = TestCase $ do
   where
     a = Var (AstInt (-3))
     b = Var (AstInt 7)
-    operation = BinaryOp LessThanOrEqual a b
+    operation = ListOfAst [BinaryOp LessThanOrEqual, a, b]
     expected = Var (AstBool "#t")
 
 testEvalLessThanOrEqual4 :: Test
@@ -44,7 +44,7 @@ testEvalLessThanOrEqual4 = TestCase $ do
   where
     a = Var (AstInt 100)
     b = Var (AstInt (-50))
-    operation = BinaryOp LessThanOrEqual a b
+    operation = ListOfAst [BinaryOp LessThanOrEqual, a, b]
     expected = Var (AstBool "#f")
 
 testEvalLessThanOrEqual5 :: Test
@@ -54,7 +54,7 @@ testEvalLessThanOrEqual5 = TestCase $ do
   where
     a = Var (AstInt 0)
     b = Var (AstInt 0)
-    operation = BinaryOp LessThanOrEqual a b
+    operation = ListOfAst [BinaryOp LessThanOrEqual, a, b]
     expected = Var (AstBool "#t")
 
 testEvalLessThanOrEqual6 :: Test
@@ -64,7 +64,7 @@ testEvalLessThanOrEqual6 = TestCase $ do
   where
     a = Var (AstInt 1)
     b = Var (AstInt 1)
-    operation = BinaryOp LessThanOrEqual a b
+    operation = ListOfAst [BinaryOp LessThanOrEqual, a, b]
     expected = Var (AstBool "#t")
 
 testEvalLessThanOrEqual7 :: Test
@@ -74,7 +74,7 @@ testEvalLessThanOrEqual7 = TestCase $ do
   where
     a = Var (AstInt (-5))
     b = Var (AstInt 0)
-    operation = BinaryOp LessThanOrEqual a b
+    operation = ListOfAst [BinaryOp LessThanOrEqual, a, b]
     expected = Var (AstBool "#t")
 
 testEvalLessThanOrEqual8 :: Test
@@ -84,7 +84,7 @@ testEvalLessThanOrEqual8 = TestCase $ do
   where
     a = Var (AstInt 10)
     b = Var (AstInt 20)
-    operation = BinaryOp LessThanOrEqual a b
+    operation = ListOfAst [BinaryOp LessThanOrEqual, a, b]
     expected = Var (AstBool "#t")
 
 testEvalLessThanOrEqual9 :: Test
@@ -94,7 +94,7 @@ testEvalLessThanOrEqual9 = TestCase $ do
   where
     a = Var (AstInt (-2))
     b = Var (AstInt 2)
-    operation = BinaryOp LessThanOrEqual a b
+    operation = ListOfAst [BinaryOp LessThanOrEqual, a, b]
     expected = Var (AstBool "#t")
 
 testEvalLessThanOrEqual10 :: Test
@@ -104,7 +104,7 @@ testEvalLessThanOrEqual10 = TestCase $ do
   where
     a = Var (AstInt 0)
     b = Var (AstInt 0)
-    operation = BinaryOp LessThanOrEqual a b
+    operation = ListOfAst [BinaryOp LessThanOrEqual, a, b]
     expected = Var (AstBool "#t")
 
 testEvalLessThanOrEqual11 :: Test
@@ -114,5 +114,5 @@ testEvalLessThanOrEqual11 = TestCase $ do
   where
     a = Var (AstInt 0)
     b = Var (AstSymb "bad input")
-    operation = BinaryOp LessThanOrEqual a b
+    operation = ListOfAst [BinaryOp LessThanOrEqual, a, b]
     expected = Nothing

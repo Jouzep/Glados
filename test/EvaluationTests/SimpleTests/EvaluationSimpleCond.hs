@@ -14,8 +14,8 @@ testEvalCond1 = TestCase $ do
   where
     a = Var (AstInt 10)
     b = Var (AstInt 5)
-    condition = BinaryOp LessThan a b
-    operation = Cond condition a b
+    condition = ListOfAst [BinaryOp LessThan, a, b]
+    operation = ListOfAst [If, condition, a, b]
     expected = b
 
 testEvalCond2 :: Test
@@ -25,8 +25,8 @@ testEvalCond2 = TestCase $ do
   where
     a = Var (AstInt 10)
     b = Var (AstInt 5)
-    condition = BinaryOp LessThan b a
-    operation = Cond condition a b
+    condition = ListOfAst [BinaryOp LessThan, b, a]
+    operation = ListOfAst [If, condition, a, b]
     expected = a
 
 testEvalCond3 :: Test
@@ -36,8 +36,8 @@ testEvalCond3 = TestCase $ do
   where
     a = Var (AstInt 10)
     b = Var (AstInt 5)
-    condition = BinaryOp GreaterThan a b
-    operation = Cond condition a b
+    condition = ListOfAst [BinaryOp GreaterThan, a, b]
+    operation = ListOfAst [If, condition, a, b]
     expected = a
 
 testEvalCond4 :: Test
@@ -47,8 +47,8 @@ testEvalCond4 = TestCase $ do
   where
     a = Var (AstInt 10)
     b = Var (AstInt 5)
-    condition = BinaryOp GreaterThan b a
-    operation = Cond condition a b
+    condition = ListOfAst [BinaryOp GreaterThan, b, a]
+    operation = ListOfAst [If, condition, a, b]
     expected = b
 
 testEvalCond5 :: Test
@@ -58,8 +58,8 @@ testEvalCond5 = TestCase $ do
   where
     a = Var (AstInt 10)
     b = Var (AstInt 10)
-    condition = BinaryOp GreaterThanOrEqual a b
-    operation = Cond condition a b
+    condition = ListOfAst [BinaryOp GreaterThanOrEqual, a, b]
+    operation = ListOfAst [If, condition, a, b]
     expected = a
 
 testEvalCond6 :: Test
@@ -69,8 +69,8 @@ testEvalCond6 = TestCase $ do
   where
     a = Var (AstInt 10)
     b = Var (AstInt 10)
-    condition = BinaryOp GreaterThanOrEqual b a
-    operation = Cond condition a b
+    condition = ListOfAst [BinaryOp GreaterThanOrEqual, b, a]
+    operation = ListOfAst [If, condition, a, b]
     expected = a
 
 testEvalCond7 :: Test
@@ -80,8 +80,8 @@ testEvalCond7 = TestCase $ do
   where
     a = Var (AstInt 5)
     b = Var (AstInt 10)
-    condition = BinaryOp LessThanOrEqual a b
-    operation = Cond condition a b
+    condition = ListOfAst [BinaryOp LessThanOrEqual, a, b]
+    operation = ListOfAst [If, condition, a, b]
     expected = a
 
 testEvalCond8 :: Test
@@ -91,8 +91,8 @@ testEvalCond8 = TestCase $ do
   where
     a = Var (AstInt 5)
     b = Var (AstInt 10)
-    condition = BinaryOp LessThanOrEqual b a
-    operation = Cond condition a b
+    condition = ListOfAst [BinaryOp LessThanOrEqual, b, a]
+    operation = ListOfAst [If, condition, a, b]
     expected = b
 
 testEvalCond9 :: Test
@@ -102,8 +102,8 @@ testEvalCond9 = TestCase $ do
   where
     a = Var (AstInt 5)
     b = Var (AstInt 5)
-    condition = BinaryOp Equal a b
-    operation = Cond condition a b
+    condition = ListOfAst [BinaryOp Equal, a, b]
+    operation = ListOfAst [If, condition, a, b]
     expected = a
 
 testEvalCond10 :: Test
@@ -113,8 +113,8 @@ testEvalCond10 = TestCase $ do
   where
     a = Var (AstInt 5)
     b = Var (AstInt 5)
-    condition = BinaryOp Equal b a
-    operation = Cond condition a b
+    condition = ListOfAst [BinaryOp Equal, b, a]
+    operation = ListOfAst [If, condition, a, b]
     expected = a
 
 testEvalCond11 :: Test
@@ -124,8 +124,8 @@ testEvalCond11 = TestCase $ do
   where
     a = Var (AstInt 5)
     b = Var (AstInt 10)
-    condition = BinaryOp NotEqual a b
-    operation = Cond condition a b
+    condition = ListOfAst [BinaryOp NotEqual, a, b]
+    operation = ListOfAst [If, condition, a, b]
     expected = a
 
 testEvalCond12 :: Test
@@ -135,6 +135,8 @@ testEvalCond12 = TestCase $ do
   where
     a = Var (AstInt 5)
     b = Var (AstInt 10)
-    condition = BinaryOp NotEqual b a
-    operation = Cond condition a b
+    condition = ListOfAst [BinaryOp NotEqual, b, a]
+    operation = ListOfAst [If, condition, a, b]
     expected = a
+
+-- ListOfAst [If, condition, a, b]

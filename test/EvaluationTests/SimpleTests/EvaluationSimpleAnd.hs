@@ -14,7 +14,7 @@ testEvalAnd1 = TestCase $ do
   where
     a = Var (AstBool "#f")
     b = Var (AstBool "#f")
-    operation = BinaryOp And a b
+    operation = ListOfAst [BinaryOp And, a, b]
     expected = Var (AstBool "#f")
 
 testEvalAnd2 :: Test
@@ -24,7 +24,7 @@ testEvalAnd2 = TestCase $ do
   where
     a = Var (AstBool "#t")
     b = Var (AstBool "#f")
-    operation = BinaryOp And a b
+    operation = ListOfAst [BinaryOp And, a, b]
     expected = Var (AstBool "#f")
 
 testEvalAnd3 :: Test
@@ -34,7 +34,7 @@ testEvalAnd3 = TestCase $ do
   where
     a = Var (AstBool "#f")
     b = Var (AstBool "#t")
-    operation = BinaryOp And a b
+    operation = ListOfAst [BinaryOp And, a, b]
     expected = Var (AstBool "#f")
 
 testEvalAnd4 :: Test
@@ -44,7 +44,7 @@ testEvalAnd4 = TestCase $ do
   where
     a = Var (AstBool "#t")
     b = Var (AstBool "#t")
-    operation = BinaryOp And a b
+    operation = ListOfAst [BinaryOp And, a, b]
     expected = Var (AstBool "#t")
 
 testEvalAnd5 :: Test
@@ -54,5 +54,5 @@ testEvalAnd5 = TestCase $ do
   where
     a = Var (AstBool "#t")
     b = Var (AstInt 5)
-    operation = BinaryOp And a b
+    operation = ListOfAst [BinaryOp And, a, b]
     expected = Nothing

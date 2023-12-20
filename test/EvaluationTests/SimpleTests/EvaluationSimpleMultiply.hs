@@ -14,7 +14,7 @@ testEvalMultiply1 = TestCase $ do
   where
     a = Var (AstInt 5)
     b = Var (AstInt 2)
-    operation = BinaryOp Multiply a b
+    operation = ListOfAst [BinaryOp Multiply, a, b]
     expected = Var (AstInt 10)
 
 testEvalMultiply2 :: Test
@@ -24,7 +24,7 @@ testEvalMultiply2 = TestCase $ do
   where
     a = Var (AstInt 8)
     b = Var (AstInt 3)
-    operation = BinaryOp Multiply a b
+    operation = ListOfAst [BinaryOp Multiply, a, b]
     expected = Var (AstInt 24)
 
 testEvalMultiply3 :: Test
@@ -34,7 +34,7 @@ testEvalMultiply3 = TestCase $ do
   where
     a = Var (AstInt (-10))
     b = Var (AstInt 4)
-    operation = BinaryOp Multiply a b
+    operation = ListOfAst [BinaryOp Multiply, a, b]
     expected = Var (AstInt (-40))
 
 testEvalMultiply4 :: Test
@@ -44,7 +44,7 @@ testEvalMultiply4 = TestCase $ do
   where
     a = Var (AstInt 100)
     b = Var (AstInt (-30))
-    operation = BinaryOp Multiply a b
+    operation = ListOfAst [BinaryOp Multiply, a, b]
     expected = Var (AstInt (-3000))
 
 testEvalMultiply5 :: Test
@@ -54,7 +54,7 @@ testEvalMultiply5 = TestCase $ do
   where
     a = Var (AstInt 0)
     b = Var (AstInt 5)
-    operation = BinaryOp Multiply a b
+    operation = ListOfAst [BinaryOp Multiply, a, b]
     expected = Var (AstInt 0)
 
 testEvalMultiply6 :: Test
@@ -64,7 +64,7 @@ testEvalMultiply6 = TestCase $ do
   where
     a = Var (AstInt 15)
     b = Var (AstInt 7)
-    operation = BinaryOp Multiply a b
+    operation = ListOfAst [BinaryOp Multiply, a, b]
     expected = Var (AstInt 105)
 
 testEvalMultiply7 :: Test
@@ -74,7 +74,7 @@ testEvalMultiply7 = TestCase $ do
   where
     a = Var (AstInt (-5))
     b = Var (AstInt 3)
-    operation = BinaryOp Multiply a b
+    operation = ListOfAst [BinaryOp Multiply, a, b]
     expected = Var (AstInt (-15))
 
 testEvalMultiply8 :: Test
@@ -84,7 +84,7 @@ testEvalMultiply8 = TestCase $ do
   where
     a = Var (AstInt 23)
     b = Var (AstInt 9)
-    operation = BinaryOp Multiply a b
+    operation = ListOfAst [BinaryOp Multiply, a, b]
     expected = Var (AstInt 207)
 
 testEvalMultiply9 :: Test
@@ -94,7 +94,7 @@ testEvalMultiply9 = TestCase $ do
   where
     a = Var (AstInt (-15))
     b = Var (AstInt 7)
-    operation = BinaryOp Multiply a b
+    operation = ListOfAst [BinaryOp Multiply, a, b]
     expected = Var (AstInt (-105))
 
 testEvalMultiply10 :: Test
@@ -104,7 +104,7 @@ testEvalMultiply10 = TestCase $ do
   where
     a = Var (AstInt 30)
     b = Var (AstInt 11)
-    operation = BinaryOp Multiply a b
+    operation = ListOfAst [BinaryOp Multiply, a, b]
     expected = Var (AstInt 330)
 
 testEvalMultiply11 :: Test
@@ -114,5 +114,5 @@ testEvalMultiply11 = TestCase $ do
   where
     a = Var (AstInt 30)
     b = Var (AstSymb "4")
-    operation = BinaryOp Multiply a b
+    operation = ListOfAst [BinaryOp Multiply, a, b]
     expected = Nothing
