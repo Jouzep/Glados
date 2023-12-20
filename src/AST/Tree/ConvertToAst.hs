@@ -4,29 +4,31 @@ module AST.Tree.ConvertToAst (
 
 import AST.Constants
 
-convertSExprToAst :: SExpr -> Ast
+convertSExprToAst ::SExpr -> Ast
 convertSExprToAst (SInt n) = Var (AstInt n)
-convertSExprToAst (SSymb s) = Var (AstSymb s)
-convertSExprToAst (SList [SSymb "define", SSymb name, valueExpr]) =
-    Define name (convertSExprToAst valueExpr)
-convertSExprToAst (SList [SSymb "cond", condExpr, thenExpr, elseExpr]) =
-    Cond (convertSExprToAst condExpr) (convertSExprToAst thenExpr) (convertSExprToAst elseExpr)
-convertSExprToAst (SList [SSymb operator, operand1, operand2]) =
-    BinaryOp (stringToBinaryOp operator) (convertSExprToAst operand1) (convertSExprToAst operand2)
-convertSExprToAst _ = error "Invalid SExpr"
+convertSExprToAst (SSymb "define") = Define
+convertSExprToAst (SSymb "if") = If
+convertSExprToAst (SSymb "lambda") = Lambda
+convertSExprToAst (SSymb "functionCall") = FunctionCall
+convertSExprToAst (SSymb "#t") = Var (AstBool "#t")
+convertSExprToAst (SSymb "#f") = Var (AstBool "#f")
+convertSExprToAst (SSymb s) =  case stringToBinaryOp s of
+    Nothing -> Var (AstSymb s)
+    Just x -> BinaryOp x
+convertSExprToAst (SList exprs) = ListOfAst (map convertSExprToAst exprs)
 
-stringToBinaryOp :: String -> AstBinaryOp
-stringToBinaryOp "+" = Add
-stringToBinaryOp "*" = Multiply
-stringToBinaryOp "-" = Sub
-stringToBinaryOp "/" = Divide
-stringToBinaryOp "%" = Modulo
-stringToBinaryOp "=" = Equal
-stringToBinaryOp "/=" = NotEqual
-stringToBinaryOp "<" = LessThan
-stringToBinaryOp "<=" = LessThanOrEqual
-stringToBinaryOp ">" = GreaterThan
-stringToBinaryOp ">=" = GreaterThanOrEqual
-stringToBinaryOp "&&" = And
-stringToBinaryOp "||" = Or
-stringToBinaryOp _ = error "Invalid binary operator"
+stringToBinaryOp :: String -> Maybe AstBinaryOp
+stringToBinaryOp "+" = Just Add
+stringToBinaryOp "*" = Just Multiply
+stringToBinaryOp "-" = Just Sub
+stringToBinaryOp "/" = Just Divide
+stringToBinaryOp "%" = Just Modulo
+stringToBinaryOp "=" = Just Equal
+stringToBinaryOp "/=" = Just NotEqual
+stringToBinaryOp "<" = Just LessThan
+stringToBinaryOp "<=" = Just LessThanOrEqual
+stringToBinaryOp ">" = Just GreaterThan
+stringToBinaryOp ">=" = Just GreaterThanOrEqual
+stringToBinaryOp "&&" = Just And
+stringToBinaryOp "||" = Just Or
+stringToBinaryOp _ = Nothing
