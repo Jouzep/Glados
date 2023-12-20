@@ -15,7 +15,9 @@ clean:
 	stack clean --full
 
 artifact: all
-	tar -czvf glados.tar.gz $$(stack path --local-install-root)
+	tar -czvf glados.tar.gz $(NAME)
+
+
 
 fclean: clean
 	$(RM) -f $(NAME)
