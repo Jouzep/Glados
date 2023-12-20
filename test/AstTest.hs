@@ -5,7 +5,7 @@ import AST.Constants
 import AST.Tree.ConvertToAst
 
 astTests :: Test
-astTests = TestList [simpleArithmeticTests, specificExpressionTests]
+astTests = TestList [simpleArithmeticTests, specificExpressionTests, pdfExpressionTests]
 
 simpleArithmeticTests :: Test
 simpleArithmeticTests = TestList
@@ -33,4 +33,16 @@ specificExpressionTests = TestList
   , "Test Nested Expressions" ~: convertSExprToAst (SList [SSymb "+", SInt 1, SList [SSymb "*", SInt 2, SInt 3]]) ~?= ListOfAst [BinaryOp Add,Var (AstInt 1),ListOfAst [BinaryOp Multiply,Var (AstInt 2),Var (AstInt 3)]]
   , "Test BinaryOp" ~: convertSExprToAst (SList [SSymb "+", SInt 2, SInt 3]) ~?= ListOfAst [BinaryOp Add,Var (AstInt 2),Var (AstInt 3)]
   , "Test Multiple Arguments FunctionCall" ~: convertSExprToAst (SList [SSymb "functionCall", SSymb "multiply", SInt 2, SInt 3, SInt 4]) ~?= ListOfAst [FunctionCall,Var (AstSymb "multiply"),Var (AstInt 2),Var (AstInt 3),Var (AstInt 4)]
+  ]
+
+pdfExpressionTests :: Test
+pdfExpressionTests = TestList
+  [ "Test If True" ~: convertSExprToAst (SList [SSymb "if", SSymb "#t", SInt 1, SInt 2]) ~?= ListOfAst [If, Var (AstBool "#t"), Var (AstInt 1), Var (AstInt 2)]
+  , "Test If False" ~: convertSExprToAst (SList [SSymb "if", SSymb "#f", SInt 1, SInt 2]) ~?= ListOfAst [If, Var (AstBool "#f"), Var (AstInt 1), Var (AstInt 2)]
+  , "Test Define and If" ~: convertSExprToAst (SList [SSymb "define", SSymb "foo", SInt 42, SSymb "if", SList [SSymb "<", SSymb "foo", SInt 10], SList [SSymb "*", SSymb "foo", SInt 3], SList [SSymb "div", SSymb "foo", SInt 2]]) ~?= ListOfAst [Define, Var (AstSymb "foo"), Var (AstInt 42), If, ListOfAst [BinaryOp LessThan, Var (AstSymb "foo"), Var (AstInt 10)], ListOfAst [BinaryOp Multiply, Var (AstSymb "foo"), Var (AstInt 3)], ListOfAst [BinaryOp Divide, Var (AstSymb "foo"), Var (AstInt 2)]]
+  , "Test Complex Expression" ~: convertSExprToAst (SList [SSymb "+", SList [SSymb "*", SInt 2, SInt 3], SList [SSymb "div", SInt 10, SInt 2]]) ~?= ListOfAst [BinaryOp Add, ListOfAst [BinaryOp Multiply, Var (AstInt 2), Var (AstInt 3)], ListOfAst [BinaryOp Divide, Var (AstInt 10), Var (AstInt 2)]]
+  , "Test Eq?" ~: convertSExprToAst (SList [SSymb "eq?", SList [SSymb "*", SInt 2, SInt 5], SList [SSymb "-", SInt 11, SInt 1]]) ~?= ListOfAst [BinaryOp Equal, ListOfAst [BinaryOp Multiply, Var (AstInt 2), Var (AstInt 5)], ListOfAst [BinaryOp Sub, Var (AstInt 11), Var (AstInt 1)]]
+  , "Test Modulo" ~: convertSExprToAst (SList [SSymb "<", SInt 1, SList [SSymb "mod", SInt 10, SInt 3]]) ~?= ListOfAst [BinaryOp LessThan, Var (AstInt 1), ListOfAst [BinaryOp Modulo, Var (AstInt 10), Var (AstInt 3)]]
+  , "Test Greater Than" ~: convertSExprToAst (SList [SSymb ">", SSymb "a", SSymb "b", SSymb "if", SList [SSymb "eq?", SSymb "a", SSymb "b"], SSymb "#f", SList [SSymb "if", SList [SSymb "<", SSymb "a", SSymb "b"], SSymb "#f", SSymb "#t"]]) ~?= ListOfAst [BinaryOp GreaterThan, Var (AstSymb "a"), Var (AstSymb "b"), If, ListOfAst [BinaryOp Equal, Var (AstSymb "a"), Var (AstSymb "b")], Var (AstBool "#f"), If, ListOfAst [BinaryOp LessThan, Var (AstSymb "a"), Var (AstSymb "b")], Var (AstBool "#f"), Var (AstBool "#t")]
+  , "Test Factorial Function" ~: convertSExprToAst (SList [SSymb "define", SList [SSymb "fact", SSymb "x"], SList [SSymb "if", SList [SSymb "eq?", SSymb "x", SInt 1], SInt 1, SList [SSymb "*", SSymb "x", SList [SSymb "fact", SList [SSymb "-", SSymb "x", SInt 1]]]], SList [SSymb "fact", SInt 5]]) ~?= ListOfAst [Define, ListOfAst [Var (AstSymb "fact"), Var (AstSymb "x")], ListOfAst [If, ListOfAst [BinaryOp Equal, Var (AstSymb "x"), Var (AstInt 1)], Var (AstInt 1), ListOfAst [BinaryOp Multiply, Var (AstSymb "x"), ListOfAst [Var (AstSymb "fact"), ListOfAst [BinaryOp Sub, Var (AstSymb "x"), Var (AstInt 1)]]]], ListOfAst [Var (AstSymb "fact"), Var (AstInt 5)]]
   ]
