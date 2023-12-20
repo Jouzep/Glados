@@ -23,7 +23,7 @@ getEnv :: Env -> String -> Maybe Ast
 getEnv (Env []) _ = Nothing
 getEnv (Env ((name, value) : xs)) varName =
     if name == varName then Just value else getEnv (Env xs) varName
-    
+
 printEnv :: Env -> IO ()
 printEnv (Env existingEnv) = do
     putStrLn (show existingEnv)
