@@ -5,7 +5,7 @@
 ## Makefile
 ##
 
-NAME = Glados
+NAME = glados
 
 all:
 	 stack build
@@ -18,15 +18,17 @@ artifact: all
 	tar -czvf glados.tar.gz $$(stack path --local-install-root)
 
 fclean: clean
-	rm -f $(NAME)
+	$(RM) -f $(NAME)
 	stack purge
-	rm -rf .hpc
+	$(RM) -rf .hpc
+	$(RM) -rf $(NAME).cabal
+	$(RM) -rf $(NAME)-test.tix
 
-
-unit_tests:
+unit_tests: re
 	stack test --coverage
 
 coverage:
+	unit_tests
 	stack hpc report --all
 
 re: fclean all

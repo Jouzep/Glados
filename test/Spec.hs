@@ -1,19 +1,12 @@
--- test/Spec.hs
-
-module Main where
-
 import Test.HUnit
-import Lib
 
-import AstTest
-import ParserTest
-
+import EvaluationTests.SimpleTests.EvaluationSimpleTests
 
 -- Combine all test cases
 allTests :: Test
 allTests = TestList
-  [ TestLabel "Ast tests" $ astTests
-  , TestLabel "Parser tests" $ parserTests
+  [ 
+    TestLabel "Evaluation Operator Simple tests" $ evalSimpleTestList
   ]
 
 -- Main function to run all the defined tests

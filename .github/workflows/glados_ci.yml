@@ -54,17 +54,22 @@ jobs:
       - name: Build project
         run: |
           make
-          make unit_tests
+          make unit_tests > test_output.txt 2>&1
 
       - name: Check test results
         run: |
-          if [ "${{ job.outputs.failure }}" = "true" ]; then
-            echo "Tests failed!"
-          else
-            echo "All tests passed!"
-          fi
-        env:
-          JOB_ID: ${{ github.job }}
+          grep "Cases" output.txt | awk '
+          /Failures: 0/ { passed = 1 }
+          /Failures: [^0]/ { failed = 1 }
+          END {
+              if (failed) {
+                  print "Some tests failed"
+                  exit 1
+              } else if (passed) {
+                  print "All tests passed"
+              }
+          }'
+
       - name: Check executables
         run: |
           filename="$EXECUTABLES"

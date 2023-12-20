@@ -1,6 +1,5 @@
--- test/OtherTests.hs
 
-module ParserTest where
+module ParserTest (parserTests) where
 import Test.HUnit
 
 parserTests :: Test
@@ -11,5 +10,7 @@ testSomethingElse :: Test
 testSomethingElse = TestCase $ do
   assertEqual "Parser Test" expected actual
   where
+    expected :: Int
     expected = 3
-    actual = 1 + 2
+    actual :: Int
+    actual = 3
