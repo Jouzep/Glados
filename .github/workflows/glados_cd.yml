@@ -47,7 +47,7 @@ jobs:
 
       - name: Move and rename file
         run: mv ${{ env.tar }} "glados-v${{ env.PACKAGE_VERSION }}.tar.gz"
-      #
+
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
