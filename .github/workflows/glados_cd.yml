@@ -58,4 +58,4 @@ jobs:
           token: ${{ github.token }}
           replacesArtifacts: true
           bodyFile: "CHANGELOG.md"
-          skipIfReleaseExists: true
+          # skipIfReleaseExists: true
