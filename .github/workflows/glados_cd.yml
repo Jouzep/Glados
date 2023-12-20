@@ -52,7 +52,8 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ env.PACKAGE_VERSION }}
-          artifacts: "glados-v${{ env.PACKAGE_VERSION }}.tar.gz"
+          artifacts: "./glados-v${{ env.PACKAGE_VERSION }}.tar.gz"
+          artifactContentType: "application/gzip"
           allowUpdates: true
           token: ${{ github.token }}
           replacesArtifacts: true

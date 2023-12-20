@@ -58,7 +58,7 @@ jobs:
 
       - name: Check test results
         run: |
-          grep "Cases" output.txt | awk '
+          grep "Cases" test_output.txt | awk '
           /Failures: 0/ { passed = 1 }
           /Failures: [^0]/ { failed = 1 }
           END {
