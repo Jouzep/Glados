@@ -27,8 +27,7 @@ fclean: clean
 unit_tests: re
 	stack test --coverage
 
-coverage:
-	unit_tests
+coverage: unit_tests
 	stack hpc report --all
 
 re: fclean all
