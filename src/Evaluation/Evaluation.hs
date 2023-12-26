@@ -4,13 +4,13 @@ module Evaluation.Evaluation (evaluation) where
 import AST.Constants
 import AST.Env
 
-evaluation :: Ast -> Env -> (Maybe Ast, Env)
-evaluation (Var (AstSymb n)) myEnv = ((evalVarCall n myEnv), myEnv)
-evaluation (Var n) myEnv = (Just (Var n), myEnv)
-evaluation (ListOfAst (BinaryOp op:args1:args2:xs)) myEnv = (evalBinaryOp op args1 args2 myEnv, myEnv)
-evaluation (ListOfAst (If:cond:thens:elsee:xs)) myEnv = (evalCond cond thens elsee myEnv, myEnv)
-evaluation (ListOfAst (Define:(Var (AstSymb (name))):value:xs)) myEnv = (Just (ListOfAst (Define:(Var (AstSymb (name))):value:xs)), pushEnv myEnv name value)
-evaluation (ListOfAst []) myEnv = (Nothing, myEnv)
+evaluation :: Ast -> Env -> (Maybe Ast, Maybe Env)
+evaluation (Var (AstSymb n)) myEnv = ((evalVarCall n myEnv), Just myEnv)
+evaluation (Var n) myEnv = (Just (Var n), Just myEnv)
+evaluation (ListOfAst (BinaryOp op:args1:args2:xs)) myEnv = (evalBinaryOp op args1 args2 myEnv, Just myEnv)
+evaluation (ListOfAst (If:cond:thens:elsee:xs)) myEnv = (evalCond cond thens elsee myEnv, Just myEnv)
+evaluation (ListOfAst (Define:(Var (AstSymb (name))):value:xs)) myEnv = (Just (ListOfAst (Define:(Var (AstSymb (name))):value:xs)), evalDefineEnv name value myEnv)
+evaluation (ListOfAst []) myEnv = (Nothing, Just myEnv)
 
 -- evaluation (Var (AstSymb name)) myEnv = (evalVarCall name myEnv, myEnv)
 
@@ -27,6 +27,11 @@ evaluation (ListOfAst []) myEnv = (Nothing, myEnv)
 -- evaluation (FunctionCall name args) myEnv = (evalFunctionCall name args myEnv, myEnv)
 
 
+evalDefineEnv :: String -> Ast -> Env -> Maybe Env
+evalDefineEnv name value myEnv = do
+    case evaluation value myEnv of
+        (Just value, Just env) -> Just (pushEnv env name value)
+        _ -> Nothing
 evalVarCall :: String -> Env -> Maybe Ast
 evalVarCall name myEnv = do
     case getEnv myEnv name of
@@ -46,10 +51,10 @@ evalFunctionCall name args myEnv = do
 evalCond :: Ast -> Ast -> Ast -> Env -> Maybe Ast
 evalCond args1 args2 args3 myEnv = do
     case evaluation args1 myEnv of
-        (Just (Var (AstBool "#t")), env1) -> do
+        (Just (Var (AstBool "#t")), Just env1) -> do
             let (result, _) = evaluation args2 env1
             result
-        (Just (Var (AstBool "#f")), env2) -> do
+        (Just (Var (AstBool "#f")), Just env2) -> do
             let (result, _) = evaluation args3 env2
             result
         _ -> Nothing
