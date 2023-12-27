@@ -13,16 +13,21 @@ processInput "exit" _ = return ()
 processInput input myEnv = case parser input of
     Just sexpr -> do
         let ast = convertSExprToAst sexpr
-        let (eval, newEnv) = evaluation ast myEnv
+        -- let (eval, newEnv) = evaluation ast myEnv
+        print(ast)
         case  evaluation ast myEnv of 
             (Just eval, Just newEnv) -> do
                 print eval
                 _ <- loopInput newEnv
                 return ()
             _ -> do
-                putStrLn "Invalid input"
+                putStrLn "Invalid evaluation"
                 _ <- loopInput myEnv
                 return ()
+    Nothing -> do
+        putStrLn "Invalid input"
+        _ <- loopInput myEnv
+        return ()
 
 loopInput :: Env -> IO ()
 loopInput myEnv = do
