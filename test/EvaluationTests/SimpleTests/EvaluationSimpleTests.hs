@@ -33,6 +33,5 @@ evalSimpleTestList =
         evalSimpleNotEqualTests,
         evalSimpleOrTests,
         evalSimpleSubTests,
-
         evalSimpleCondTests
     ]
