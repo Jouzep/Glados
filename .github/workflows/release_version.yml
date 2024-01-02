@@ -28,7 +28,7 @@ jobs:
           package_version="$(awk '/^version:/{print $2}' package.yaml)"
           if [ "$latest_release" == "$package_version" ]; then
             echo "Release already exist $package_version."
+            exit 1
           else
             echo "Release ready to upload. $package_version"
-            exit 1
           fi
