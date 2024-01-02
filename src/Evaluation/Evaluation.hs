@@ -9,10 +9,10 @@ evaluation (Var (AstSymb n)) myEnv = ((evalVarCall n myEnv), Just myEnv)
 evaluation (Var n) myEnv = (Just (Var n), Just myEnv)
 
 -- Operation
-evaluation (ListOfAst (BinaryOp op:args1:args2:xs)) myEnv = (evalBinaryOp op args1 args2 myEnv, Just myEnv)
+evaluation (ListOfAst [BinaryOp op,args1,(args2)]) myEnv = (evalBinaryOp op args1 (args2) myEnv, Just myEnv)
 
 -- Condition
-evaluation (ListOfAst (If:cond:thens:elsee:xs)) myEnv = (evalCond cond thens elsee myEnv, Just myEnv)
+evaluation (ListOfAst [If,cond,thens,elsee]) myEnv = (evalCond cond thens elsee myEnv, Just myEnv)
 
 -- Define
 -- evaluation (ListOfAst (Define:(Var (AstSymb (name))):value:xs)) myEnv = (Just (ListOfAst (Define:(Var (AstSymb (name))):value:xs)), evalDefineVar name value myEnv)
