@@ -4,28 +4,65 @@ module Evaluation.Evaluation (evaluation) where
 import AST.Constants
 import AST.Env
 
-evaluation :: Ast -> Env -> (Maybe Ast, Env)
-evaluation (Var (AstSymb n)) myEnv = ((evalVarCall n myEnv), myEnv)
-evaluation (Var n) myEnv = (Just (Var n), myEnv)
-evaluation (ListOfAst (BinaryOp op:args1:args2:xs)) myEnv = (evalBinaryOp op args1 args2 myEnv, myEnv)
-evaluation (ListOfAst (If:cond:thens:elsee:xs)) myEnv = (evalCond cond thens elsee myEnv, myEnv)
-evaluation (ListOfAst (Define:(Var (AstSymb (name))):value:xs)) myEnv = (Just (ListOfAst (Define:(Var (AstSymb (name))):value:xs)), pushEnv myEnv name value)
-evaluation (ListOfAst []) myEnv = (Nothing, myEnv)
+evaluation :: Ast -> Env -> (Maybe Ast, Maybe Env)
+evaluation (Var (AstSymb n)) myEnv = ((evalVarCall n myEnv), Just myEnv)
+evaluation (Var n) myEnv = (Just (Var n), Just myEnv)
 
--- evaluation (Var (AstSymb name)) myEnv = (evalVarCall name myEnv, myEnv)
+-- Operation
+evaluation (ListOfAst [BinaryOp op,args1,(args2)]) myEnv = (evalBinaryOp op args1 (args2) myEnv, Just myEnv)
 
--- evaluation (Var n) myEnv = (Just (Var n), myEnv)
+-- Condition
+evaluation (ListOfAst [If,cond,thens,elsee]) myEnv = (evalCond cond thens elsee myEnv, Just myEnv)
 
--- evaluation (Define name value) myEnv = (Just (Define name value), pushEnv myEnv name value)
+-- Define
+-- evaluation (ListOfAst (Define:(Var (AstSymb (name))):value:xs)) myEnv = (Just (ListOfAst (Define:(Var (AstSymb (name))):value:xs)), evalDefineVar name value myEnv)
+evaluation (ListOfAst (Define:ListOfAst ((Var (AstSymb (name))):args):ListOfAst function:xs)) myEnv = (Just (ListOfAst (Define:ListOfAst ((Var (AstSymb (name))):args):ListOfAst function:xs)), evalDefineFunction name args function myEnv)
+evaluation (ListOfAst (Define:(Var (AstSymb (name))):value:xs)) myEnv = (Just (ListOfAst (Define:(Var (AstSymb (name))):value:xs)), Just (pushEnv myEnv name value))
+-- FunctionCall
+-- evaluation (ListOfAst((Var (AstSymb (name)):rest)) myEnv = (evalFunctionCall name (ListOfAst rest), Just myEnv)
+evaluation (ListOfAst (Var (AstSymb name) : rest)) myEnv = (evalFunctionCall name (ListOfAst rest) myEnv, Just myEnv)
+evaluation (ListOfAst (ListOfAst(Lambda:params:body:values):xs)) myEnv = (evalLambda params body (ListOfAst values) myEnv, Just myEnv)
+--                                       AST : AST : [AST]
+evaluation _ _= (Nothing, Nothing)
 
--- evaluation (BinaryOp op args1 args2) myEnv = (evalBinaryOp op args1 args2 myEnv, myEnv)
+replaceElements :: Eq a => [(a, a)] -> [a] -> [a]
+replaceElements replacementsList defaultList = map replace defaultList
+  where
+    replace x = case lookup x replacementsList of
+      Just newValue -> newValue
+      Nothing -> x
+-- (define add(lambda (a b)(+ a b)))
+-- (add 3 4)
+evalLambda :: Ast -> Ast -> Ast -> Env -> Maybe Ast
+evalLambda (ListOfAst params) (ListOfAst body) (ListOfAst values) myEnv = do
+    let replacedValue = replaceElements (zip params values) body
+    let (result, _) =  (evaluation (ListOfAst replacedValue) myEnv)
+    result
+evalLambda _ _ _ _ = Nothing
 
--- evaluation (Cond args1 args2 args3) myEnv = (evalCond args1 args2 args3 myEnv, myEnv)
+evalFunctionCall :: String -> Ast -> Env -> Maybe Ast
+evalFunctionCall name (ListOfAst args) myEnv = do
+    case getEnv myEnv name of
+        Just (ListOfAst [ListOfAst params, ListOfAst body]) -> do
+            let replacedValue = replaceElements (zip params args) body
+            let (result, _) =  (evaluation (ListOfAst replacedValue) myEnv)
+            result
+        Just (ListOfAst [Lambda, ListOfAst params, ListOfAst body]) -> do
+            let replacedValue = replaceElements (zip params args) body
+            let (result, _) =  (evaluation (ListOfAst replacedValue) myEnv)
+            result
+        _ -> Nothing
+evalFunctionCall _ _ _ = Nothing
 
--- -- evaluation (FunctionCall name args) myEnv = (Just (FunctionCall name args), myEnv)
+evalDefineFunction :: String -> [Ast] -> [Ast] -> Env -> Maybe Env
+evalDefineFunction name args functions myEnv =
+    Just (pushEnv myEnv name (ListOfAst [ListOfAst args, ListOfAst functions]))
 
--- evaluation (FunctionCall name args) myEnv = (evalFunctionCall name args myEnv, myEnv)
-
+evalDefineVar :: String -> Ast -> Env -> Maybe Env
+evalDefineVar name value myEnv = do
+    case evaluation value myEnv of
+        (Just newValue, Just newEnv) -> Just (pushEnv newEnv name newValue)
+        _ -> Nothing
 
 evalVarCall :: String -> Env -> Maybe Ast
 evalVarCall name myEnv = do
@@ -35,21 +72,14 @@ evalVarCall name myEnv = do
             result
         _ -> Nothing
 
-evalFunctionCall :: String -> [Ast] -> Env -> Maybe Ast
-evalFunctionCall name args myEnv = do
-    case getEnv myEnv name of
-        Just (ast) -> do
-            let (result, _) =  (evaluation ast myEnv)
-            result
-        _ -> Nothing
 
 evalCond :: Ast -> Ast -> Ast -> Env -> Maybe Ast
 evalCond args1 args2 args3 myEnv = do
     case evaluation args1 myEnv of
-        (Just (Var (AstBool "#t")), env1) -> do
+        (Just (Var (AstBool "#t")), Just env1) -> do
             let (result, _) = evaluation args2 env1
             result
-        (Just (Var (AstBool "#f")), env2) -> do
+        (Just (Var (AstBool "#f")), Just env2) -> do
             let (result, _) = evaluation args3 env2
             result
         _ -> Nothing
