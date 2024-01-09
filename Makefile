@@ -29,6 +29,8 @@ fclean: clean
 unit_tests: re
 	stack test --coverage
 
+integration_test: re
+	python3 integration_test.py
 coverage: unit_tests
 	stack hpc report --all
 
