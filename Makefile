@@ -17,8 +17,6 @@ clean:
 artifact: all
 	tar -czvf glados.tar.gz $(NAME)
 
-
-
 fclean: clean
 	$(RM) -f $(NAME)
 	stack purge
@@ -31,6 +29,9 @@ unit_tests: re
 
 integration_test: re
 	python3 integration_test.py
+
+ci: unit_tests integration_test
+
 coverage: unit_tests
 	stack hpc report --all
 

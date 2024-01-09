@@ -21,7 +21,7 @@ def run_haskell_executable(input_data, Expected):
     except AssertionError as e:
         # print(e)
         return f"{Color.RED}Failed{Color.END}", result.stdout.strip().split("\n")[-1]
-    return f"{Color.GREEN}Succes{Color.END}", result.stdout.strip().split("\n")[-1]
+    return f"{Color.GREEN}Success{Color.END}", result.stdout.strip().split("\n")[-1]
 
 test_suites = [
     {"Name": "Simple define", "Input": "(define foo 21))", "Expected": 'ListOfAst [Define,Var (AstSymb "foo"),Var (AstInt 21)]'},
@@ -54,4 +54,6 @@ if __name__ == "__main__":
             failed.append(name)
     print(f"{Color.ORANGE}Total tests: {len(test_suites)}, {Color.END}{Color.GREEN}Passed: {len(test_suites) - len(failed)}, {Color.END}{Color.RED}Failed: {len(failed)}{Color.END}")
     print(f"{Color.RED}Failed tests: {failed}{Color.END}")
-    
+    if failed:
+        exit(1)
+    exit(0)

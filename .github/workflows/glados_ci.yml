@@ -69,7 +69,16 @@ jobs:
                   print "All tests passed"
               }
           }'
-
+      - name: Check integration test results
+        run: |
+          make integration_test
+          EXIT_CODE=$?
+          if [ $EXIT_CODE -eq 0 ]; then
+            echo "Success! All integration tests passed."
+          else
+            echo "Error Some tests failed"
+            exit 1
+          fi
       - name: Check executables
         run: |
           filename="${EXECUTABLES}"
