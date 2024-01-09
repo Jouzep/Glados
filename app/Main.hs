@@ -13,6 +13,7 @@ processInput "exit" _ = return ()
 processInput input myEnv = case parser input of
     Just sexpr -> do
         let ast = convertSExprToAst sexpr
+        print sexpr
         case  evaluation ast myEnv of 
             (Just eval, Just newEnv) -> do
                 print eval

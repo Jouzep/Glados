@@ -8,4 +8,9 @@ and this project adheres to the
 
 ## Unreleased
 
-## 0.1.0.0 - YYYY-MM-DD
+## 0.1.2.2 - 2024-01-09
+
+# Integration Tests
+
+    - Integration Tests with python
+    - Github Action that check the integration Tests

@@ -25,10 +25,10 @@ jobs:
             "https://api.github.com/repos/${{ github.repository }}/releases/latest" | jq -r .tag_name)
 
           echo "Latest release tag: $latest_release"
-
-          if [ "$latest_release" == "null" ]; then
-            echo "No release found for the latest commit."
-          else
-            echo "Release $latest_release already exists."
+          package_version="$(awk '/^version:/{print $2}' package.yaml)"
+          if [ "$latest_release" == "$package_version" ]; then
+            echo "Release already exist $package_version."
             exit 1
+          else
+            echo "Release ready to upload. $package_version"
           fi
