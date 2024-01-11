@@ -1,5 +1,5 @@
 -- Evaluation.hs
-module Evaluation.Evaluation (evaluation) where
+module VirtualMachine.Evaluation (evaluation) where
 
 import AST.Constants
 import AST.Env
@@ -31,8 +31,6 @@ replaceElements replacementsList defaultList = map replace defaultList
     replace x = case lookup x replacementsList of
       Just newValue -> newValue
       Nothing -> x
--- (define add(lambda (a b)(+ a b)))
--- (add 3 4)
 evalLambda :: Ast -> Ast -> Ast -> Env -> Maybe Ast
 evalLambda (ListOfAst params) (ListOfAst body) (ListOfAst values) myEnv = do
     let replacedValue = replaceElements (zip params values) body
