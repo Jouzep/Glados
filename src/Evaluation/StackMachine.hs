@@ -11,17 +11,20 @@ type Insts = [Instruction]
 exec :: Args -> Insts -> Stack -> Either String Value
 exec args [] [result] = Right result
 exec args (Push val : insts) stack = exec args insts (val : stack)
-exec args (Call : insts) (FuncVal f : stack) = exec args f stack
+exec args (Call : insts) (FuncVal f : stack) = do
+    case (exec stack f []) of
+        Right returnValue -> exec args insts (returnValue : stack)
+        Left error -> Left error
+    -- exec args insts ((exec stack f []): stack) -- result of the function 
 exec args (Call : insts) (OpVal op : stack) = execOperator args (OpVal op) insts stack
 exec args (Call : _) _ = Left "Call instruction requires a function or operator on the stack"
 exec args (JumpIfFalse (IntVal number) : insts) (BoolVal False : stack) = exec args (drop number insts) stack
 exec args (JumpIfFalse (IntVal number) : insts) (BoolVal True : stack) = exec args (insts) stack
-exec args (Ret : _) [result] = Right result
+exec args (Ret : _) (result : _) = Right result
 exec args (PushArg index : insts) stack
     | index < length args = exec args insts ((args !! index) : stack)
     | otherwise = Left $ "Invalid argument index: " ++ show index
-
-exec args insts stacks = Left $ "Invalid operation or insufficient operands : " ++ show insts ++ show stacks
+exec args insts stacks = Left $ "Invalid operation or insufficient operands : Instruction:  " ++ show insts ++ "   STACK :  "++ show stacks
 
 
 execOperator :: Args -> Value -> Insts -> Stack -> Either String Value
@@ -50,7 +53,8 @@ main = do
     let program5 = [Push (IntVal 2), Push (IntVal 2), Push (OpVal Eq), Call, JumpIfFalse (IntVal 1), Push (IntVal 1), Ret, Push (IntVal 4), Ret]
     let program6 = [Push (IntVal 11), Push (IntVal 10), Push (OpVal Eq), Call, JumpIfFalse (IntVal 2), Push (IntVal 1), Ret, Push (IntVal 2), Ret]
     let programWithArgs = [PushArg 1, Push (IntVal 0), Push (OpVal Less), Call, JumpIfFalse (IntVal 2), PushArg 1, Ret, PushArg 0, Push (IntVal (-1)), Push (OpVal Multiply), Call, Ret]
-    let programWithUserFunc = [Push (IntVal (-42)), Push (FuncVal function), Call, Ret]
+    let programWithUserFunc = [Push (IntVal (-42)), Push (FuncVal function), Call,Push (FuncVal function), Call, Push (IntVal 5), Push (OpVal Eq), Call,JumpIfFalse (IntVal 2), Push (IntVal 1), Ret, Push (IntVal 2), Ret]
+
     putStrLn $ "test 1: " ++ printResult (exec args program1 [])
     putStrLn $ "test 2: " ++ printResult (exec args program2 [])
     putStrLn $ "test 3: " ++ printResult (exec args program3 [])
@@ -58,4 +62,24 @@ main = do
     putStrLn $ "test 5: " ++ printResult (exec args program5 [])
     putStrLn $ "test 6: " ++ printResult (exec args program6 [])
     putStrLn $ "test Args: " ++ printResult (exec args programWithArgs [])
-    putStrLn $ "test UserFunc: " ++ printResult (exec args programWithUserFunc [])
+    putStrLn $ "test UserFunc: " ++ printResult (exec [] programWithUserFunc [])
+
+
+
+-- [0, -42]
+-- [0, -42]
+
+-- 0 < -42
+-- False
+-- [Mul, -1, -42, 0, -42]
+
+-- main(a, b) {
+--     func1(a b) {
+--         let c = a + b
+--         let a = func2(c) {
+--             c vient de la stack ||  stack: [] args: []
+--             let d = c + 1
+--             let e = c + 2
+--         }
+--     }
+-- }
