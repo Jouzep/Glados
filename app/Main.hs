@@ -4,7 +4,7 @@ import Control.Exception (catch, IOException)
 import AST.Constants()
 import Parser.Parser
 import AST.Tree.ConvertToAst
-import Evaluation.Evaluation
+import VirtualMachine.Evaluation
 import AST.Env
 import Lib()
 
