@@ -8,9 +8,19 @@ and this project adheres to the
 
 ## Unreleased
 
-## 0.1.2.2 - 2024-01-09
+## 0.1.2.3 - 2024-21-01
 
-# Integration Tests
+# VM - StackMachine
 
-    - Integration Tests with python
-    - Github Action that check the integration Tests
+    - First VM execution
+    - Error Handling
+    - Handling Conditions execution
+    - Handling User Defined Function execution
+    - Handling Environment and Recursive execution
+
+# Data Structure
+
+    - Value
+    - Operator
+    - Function Call
+    - Environment

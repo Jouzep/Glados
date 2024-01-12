@@ -44,30 +44,30 @@ printResult (Right (BoolVal val)) = show val
 printResult (Right (IntVal val)) = show val
 printResult (Left errMsg) = errMsg
 
-main :: IO ()
-main = do
-    let args = [IntVal 42, IntVal (-42)]
-    let function = [PushArg 0, Push (IntVal 0), Push (OpVal Less1), Call, JumpIfFalse (IntVal 2), PushArg 0, Ret, PushArg 0, Push (IntVal (-1)), Push (OpVal Multiply1), Call, Ret]
-    let program1 = [Push (IntVal 42), Ret]
-    let program2 = [Push (IntVal 0), Push (IntVal 41), Push (OpVal Divide1), Call, Ret]
-    let program3 = [Push (IntVal 10), Push (IntVal 10), Push (OpVal Eq1), Call, Ret]
-    let program4 = [Push (IntVal 2), Push (IntVal 5), Push (OpVal Less1), Call, Ret]
-    let program5 = [Push (IntVal 2), Push (IntVal 2), Push (OpVal Eq1), Call, JumpIfFalse (IntVal 1), Push (IntVal 1), Ret, Push (IntVal 4), Ret]
-    let program6 = [Push (IntVal 11), Push (IntVal 10), Push (OpVal Eq1), Call, JumpIfFalse (IntVal 2), Push (IntVal 1), Ret, Push (IntVal 2), Ret]
-    let programWithArgs = [PushArg 1, Push (IntVal 0), Push (OpVal Less1), Call, JumpIfFalse (IntVal 2), PushArg 1, Ret, PushArg 0, Push (IntVal (-1)), Push (OpVal Multiply1), Call, Ret]
-    let programWithUserFunc = [Push (IntVal (-42)), Push (FuncVal function), Call,Push (FuncVal function), Call, Push (IntVal 5), Push (OpVal Eq1), Call,JumpIfFalse (IntVal 2), Push (IntVal 1), Ret, Push (IntVal 2), Ret]
-    let env = [("fact", Push (FuncVal[PushArg 0, Push(IntVal 1), Push (OpVal Eq1), Call, JumpIfFalse (IntVal 2), Push (IntVal 1), Ret, Push (IntVal 1), PushArg 0, Push(OpVal Subtract1), Call, PushEnv "fact", Call, PushArg 0, Push (OpVal Multiply1), Call , Ret]))]
-                                 --   PushArg 0  Push 1          Push Eq          Call  JumpIfFalse 2           Push 1           Ret  Push 1           PushArg 0  Push Sub              Call  PushEnv "fact"  Call  PushArg 0  Push Mul               Call   Ret
-    let programWithEnvAndRecursive = [Push (IntVal 5), PushEnv "fact", Call, Ret]
-    putStrLn $ "test 1: " ++ printResult (exec [] args program1 [])
-    putStrLn $ "test 2: " ++ printResult (exec [] args program2 [])
-    putStrLn $ "test 3: " ++ printResult (exec [] args program3 [])
-    putStrLn $ "test 4: " ++ printResult (exec [] args program4 [])
-    putStrLn $ "test 5: " ++ printResult (exec [] args program5 [])
-    putStrLn $ "test 6: " ++ printResult (exec [] args program6 [])
-    putStrLn $ "test Args: " ++ printResult (exec [] args programWithArgs [])
-    putStrLn $ "test UserFunc: " ++ printResult (exec [] [] programWithUserFunc [])
-    putStrLn $ "test Env And Recursive Function: " ++ printResult (exec env [] programWithEnvAndRecursive [])
+-- main :: IO ()
+-- main = do
+--     let args = [IntVal 42, IntVal (-42)]
+--     let function = [PushArg 0, Push (IntVal 0), Push (OpVal Less1), Call, JumpIfFalse (IntVal 2), PushArg 0, Ret, PushArg 0, Push (IntVal (-1)), Push (OpVal Multiply1), Call, Ret]
+--     let program1 = [Push (IntVal 42), Ret]
+--     let program2 = [Push (IntVal 0), Push (IntVal 41), Push (OpVal Divide1), Call, Ret]
+--     let program3 = [Push (IntVal 10), Push (IntVal 10), Push (OpVal Eq1), Call, Ret]
+--     let program4 = [Push (IntVal 2), Push (IntVal 5), Push (OpVal Less1), Call, Ret]
+--     let program5 = [Push (IntVal 2), Push (IntVal 2), Push (OpVal Eq1), Call, JumpIfFalse (IntVal 1), Push (IntVal 1), Ret, Push (IntVal 4), Ret]
+--     let program6 = [Push (IntVal 11), Push (IntVal 10), Push (OpVal Eq1), Call, JumpIfFalse (IntVal 2), Push (IntVal 1), Ret, Push (IntVal 2), Ret]
+--     let programWithArgs = [PushArg 1, Push (IntVal 0), Push (OpVal Less1), Call, JumpIfFalse (IntVal 2), PushArg 1, Ret, PushArg 0, Push (IntVal (-1)), Push (OpVal Multiply1), Call, Ret]
+--     let programWithUserFunc = [Push (IntVal (-42)), Push (FuncVal function), Call,Push (FuncVal function), Call, Push (IntVal 5), Push (OpVal Eq1), Call,JumpIfFalse (IntVal 2), Push (IntVal 1), Ret, Push (IntVal 2), Ret]
+--     let env = [("fact", Push (FuncVal[PushArg 0, Push(IntVal 1), Push (OpVal Eq1), Call, JumpIfFalse (IntVal 2), Push (IntVal 1), Ret, Push (IntVal 1), PushArg 0, Push(OpVal Subtract1), Call, PushEnv "fact", Call, PushArg 0, Push (OpVal Multiply1), Call , Ret]))]
+--                                  --   PushArg 0  Push 1          Push Eq          Call  JumpIfFalse 2           Push 1           Ret  Push 1           PushArg 0  Push Sub              Call  PushEnv "fact"  Call  PushArg 0  Push Mul               Call   Ret
+--     let programWithEnvAndRecursive = [Push (IntVal 5), PushEnv "fact", Call, Ret]
+--     putStrLn $ "test 1: " ++ printResult (exec [] args program1 [])
+--     putStrLn $ "test 2: " ++ printResult (exec [] args program2 [])
+--     putStrLn $ "test 3: " ++ printResult (exec [] args program3 [])
+--     putStrLn $ "test 4: " ++ printResult (exec [] args program4 [])
+--     putStrLn $ "test 5: " ++ printResult (exec [] args program5 [])
+--     putStrLn $ "test 6: " ++ printResult (exec [] args program6 [])
+--     putStrLn $ "test Args: " ++ printResult (exec [] args programWithArgs [])
+--     putStrLn $ "test UserFunc: " ++ printResult (exec [] [] programWithUserFunc [])
+--     putStrLn $ "test Env And Recursive Function: " ++ printResult (exec env [] programWithEnvAndRecursive [])
 
 -- [0, -42]
 -- [0, -42]
