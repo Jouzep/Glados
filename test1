@@ -1,0 +1,20 @@
+let caca = 3;
+function crotte(a,b) {
+    let c =    a + 2;
+    let d = a + c;
+    if (c == d) {
+        return d;
+    }
+    return c;
+}
+let caca2 = 4;
+function toto(a,b) {
+    let c = a - b;
+    let d = b * caca;
+    if (d < c) {
+        return d;
+    }
+    let e = a / b;
+    let f = d % e;
+    return f;
+}

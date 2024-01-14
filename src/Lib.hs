@@ -1,13 +1,14 @@
 module Lib
-    (parseSExpr,
-    parseList,
+    (
+      parseMany,
+      parseChar,
+      parseOr,
+      parseChiasse,
+      parseFunctionCall,
+      parseList,
     ) where
 
 import AST.Constants
-
--- PARSER
-
-type Parser a = String -> Maybe (a, String)
 
 parseChar :: Char -> Parser Char
 parseChar c (x : xs) | c == x = Just (c, xs)
@@ -69,18 +70,6 @@ parseUInt input =
     Nothing -> Nothing
 _ = Nothing
 
-parseSExpr :: Parser SExpr
-parseSExpr input =
-  case parseInt input of
-    Just (result, rest) -> Just (SInt result, rest)
-    Nothing ->
-      case parseSome (parseAnyChar (['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ "+*-/%=<>&|#")) input of
-        Just (result, rest) -> Just (SSymb result, rest)
-        Nothing ->
-          case parseList parseSExpr input of
-            Just (result, rest) -> Just (SList result, rest)
-            Nothing -> Nothing
-
 parseInt :: Parser Int -- parse a signed Int
 parseInt input =
   case parseChar '-' input of
@@ -112,10 +101,121 @@ parseList :: Parser a -> Parser [a] -- parse a list
 parseList parser input =
   case parseChar '(' input of
     Just (_, rest) ->
-      case parseMany (parseAndWith const parser (parseMany (parseChar ' ' `parseOr` parseChar '\n' `parseOr` parseChar '\t'))) rest of
+      case parseMany (parseAndWith const parser (parseMany (parseChar ','))) rest of
         Just (results, rest') -> case parseMany (parseAndWith const (parseChar ')') (parseMany (parseChar ' ' `parseOr` parseChar '\n' `parseOr` parseChar '\t'))) rest' of
             Just (_, rest'') -> Just (results, rest'')
             Nothing -> Nothing
         Nothing -> Nothing
     Nothing -> Nothing
 _ = Nothing
+
+parseCond :: Parser a -> Parser [a]
+parseCond parser input =
+  case parseChar '(' input of
+    Just (_, rest) -> case parseMany (parseAndWith const parser (parseMany (parseChar ' ' `parseOr` parseChar '\n' `parseOr` parseChar '\t'))) rest of
+        Just (results, rest') -> case parseMany (parseAndWith const (parseChar ')') (parseMany (parseChar ' ' `parseOr` parseChar '\n' `parseOr` parseChar '\t'))) rest' of
+            Just (_, rest'') -> Just (results, rest'')
+            Nothing -> Nothing
+        Nothing -> Nothing
+
+parseLine :: Parser a -> Parser [a] -- parse a line
+parseLine parser input =
+  case parseMany (parseChar ' ' `parseOr` parseChar '\n' `parseOr` parseChar '\t') input of
+    Just (_, rest) -> case parseMany (parseAndWith const parser (parseMany (parseChar ' ' `parseOr` parseChar '\n' `parseOr` parseChar '\t'))) rest of
+        Just (results, rest') -> case parseChar ';' rest' of
+            Just (_, rest'') -> Just (results, rest'')
+            Nothing -> Nothing
+        Nothing -> Nothing
+    Nothing -> Nothing
+
+parseBody :: Parser [Chiasse]
+parseBody input =
+  case parseChar '{' input of
+    Just (_, rest) ->
+      case parseMany (parseChar ' ' `parseOr` parseChar '\n' `parseOr` parseChar '\t') rest of
+        Just (_, rest') -> case parseChiasse rest' of
+          Just (results, rest'') -> case parseMany (parseChar ' ' `parseOr` parseChar '\n' `parseOr` parseChar '\t') rest'' of
+            Just (_, rest''') -> case parseChar '}' rest''' of
+              Just (_, rest'''') -> Just (results, rest'''')
+              Nothing -> Nothing
+            Nothing -> Nothing
+          Nothing -> Nothing
+        Nothing -> Nothing
+    Nothing -> Nothing
+
+parseChiasse :: Parser [Chiasse]
+parseChiasse "" = Nothing
+parseChiasse input =
+  case parseFunction input of
+    Just (result, rest) -> case parseChiasse rest of
+      Just(result', rest') -> Just (CFunction result : result', rest')
+      Nothing -> Just ([CFunction result], rest)
+    Nothing -> case parseLine (parseSome (parseAnyChar (['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ "+*-/%=<>&|#"))) input of
+        Just (result, rest) -> case parseChiasse rest of
+          Just(result', rest') -> Just (CLine result : result', rest')
+          Nothing -> Just ([CLine result], rest)
+        Nothing -> case parseFunctionCall input of
+          Just (result, rest) -> case parseChiasse rest of
+            Just(result', rest') -> Just (CCall result : result', rest')
+            Nothing -> Just ([CCall result], rest)
+          Nothing -> case parseIf input of
+            Just (result, rest) -> case parseChiasse rest of
+              Just(result', rest') -> Just (CIf result : result', rest')
+              Nothing -> Just ([CIf result], rest)
+            Nothing -> Just ([], input)
+
+parseIf :: Parser CCond
+parseIf input =
+  case parseMany (parseChar ' ' `parseOr` parseChar '\n' `parseOr` parseChar '\t') input of
+    Just (_, prevRest) -> case parseMany (parseAnyChar "if") prevRest of
+      Just ("if", rest) -> case parseMany (parseChar ' ' `parseOr` parseChar '\n' `parseOr` parseChar '\t') rest of
+        Just (_, rest') -> case parseCond (parseSome (parseAnyChar (['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9']++  "+*-/%=<>&|#"))) rest' of
+          Just (results, rest'') -> case parseMany (parseChar ' ' `parseOr` parseChar '\n' `parseOr` parseChar '\t') rest'' of
+            Just (_, rest''') -> case parseBody rest''' of
+              Just (results', rest'''') -> case parseMany (parseChar ' ' `parseOr` parseChar '\n' `parseOr` parseChar '\t') rest'''' of
+                Just (_, rest''''') -> case parseMany (parseAnyChar "else") rest''''' of
+                  Just ("else", rest'''''') -> case parseMany (parseChar ' ' `parseOr` parseChar '\n' `parseOr` parseChar '\t') rest'''''' of
+                    Just (_, rest''''''') -> case parseBody rest''''''' of
+                      Just (results'', rest'''''''') -> Just ((results, results', results''), rest'''''''')
+                      Nothing -> Nothing
+                    Nothing -> Nothing
+                  _ -> Just ((results, results', []), rest''''')
+                Nothing -> Just ((results, results', []), rest'''')
+              Nothing -> Nothing
+            Nothing -> Nothing
+          Nothing -> Nothing
+        Nothing -> Nothing
+      _ -> Nothing
+    Nothing -> Nothing
+_ = Nothing
+
+
+parseFunction :: Parser Func
+parseFunction input =
+  case parseMany (parseChar ' ' `parseOr` parseChar '\n' `parseOr` parseChar '\t') input of
+    Just (_, rest) -> case parseMany (parseAndWith const (parseSome (parseAnyChar (['a'..'z'] ++ ['A'..'Z']))) (parseMany (parseChar ' ' `parseOr` parseChar '\n' `parseOr` parseChar '\t'))) rest of
+        Just (results, rest') -> case parseMany (parseChar ' ' `parseOr` parseChar '\n' `parseOr` parseChar '\t') rest' of
+          Just (_, rest'') -> case  parseList (parseSome (parseAnyChar (['a'..'z']))) rest'' of
+            Just (results', rest''') -> case parseMany (parseChar ' ' `parseOr` parseChar '\n' `parseOr` parseChar '\t') rest''' of
+              Just (_, rest'''') -> case parseBody rest'''' of
+                Just (results'', rest''''') -> Just ((results, results', results''), rest''''')
+                Nothing -> Nothing
+              Nothing -> Nothing
+            Nothing -> Nothing
+          Nothing -> Nothing
+        Nothing -> Nothing
+    Nothing -> Nothing
+_ = Nothing
+
+parseFunctionCall :: Parser Call
+parseFunctionCall input =
+  case parseMany (parseChar ' ' `parseOr` parseChar '\n' `parseOr` parseChar '\t') input of
+    Just (_, rest) -> case parseSome (parseAnyChar (['a'..'z'] ++ ['A'..'Z'])) rest of
+        Just (results, rest') -> case parseMany (parseChar ' ' `parseOr` parseChar '\n' `parseOr` parseChar '\t') rest' of
+          Just (_, rest'') -> case parseList (parseSome (parseAnyChar (['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ "+*-/%=<>&|#"))) rest'' of
+            Just (results', rest''') -> case parseChar ';' rest''' of
+              Just (_, rest'''') -> Just ((results, results'), rest'''')
+              Nothing -> Nothing
+            Nothing -> Nothing
+          Nothing -> Nothing
+        Nothing -> Nothing

@@ -12,15 +12,11 @@ processInput :: String -> AST.Env.Env -> IO ()
 processInput "exit" _ = return ()
 processInput input myEnv = case parser input of
     Just sexpr -> do
-        let ast = convertSExprToAst sexpr
-        print sexpr
-        case  evaluation ast myEnv of 
-            (Just eval, Just newEnv) -> do
-                print eval
-                _ <- loopInput newEnv
-                return ()
-            _ -> do
-                putStrLn "Invalid evaluation"
+        case convertAllChiasseToAst sexpr of
+            Just asts -> do
+                print asts
+            Nothing -> do
+                putStrLn "Invalid input"
                 _ <- loopInput myEnv
                 return ()
     Nothing -> do
@@ -30,12 +26,11 @@ processInput input myEnv = case parser input of
 
 loopInput :: Env -> IO ()
 loopInput myEnv = do
-    result <- catch getLine handleEOF
+    result <- catch getContents handleEOF
     processInput result myEnv
     where
         handleEOF :: IOException -> IO String
         handleEOF _ = return "exit"
-
 main :: IO ()
 main = do
     let myEnv = createEnv
