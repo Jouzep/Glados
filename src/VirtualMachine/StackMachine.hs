@@ -6,6 +6,7 @@ exec :: Env -> Args -> Insts -> Stack -> Either String Value
 exec env args [] [result] = Right result
 exec env args (Push val : insts) stack = exec env args insts (val : stack)
 exec env args (PushEnv funcName : insts) stack = do
+    -- putStrLn $ "result from main function"
     case (execGetFunctionFromEnv env funcName) of
         Right inst -> exec env args (inst: insts) stack
         Left error -> Left error
@@ -37,7 +38,10 @@ execOperator env args (OpVal Subtract1) insts (IntVal v1 : IntVal v2 : stack) = 
 execOperator env args (OpVal Multiply1) insts (IntVal v1 : IntVal v2 : stack) = exec env args  insts (IntVal (v1 * v2) : stack)
 execOperator env args (OpVal Divide1) insts (IntVal v1 : IntVal v2 : stack)
     | v2 == 0 = Left "Error: division by zero"
-    | otherwise = exec env args  insts (IntVal (v1 `div` v2) : stack)
+    | otherwise = exec env args insts (IntVal (v1 `div` v2) : stack)
+execOperator env args (OpVal Modulo1) insts (IntVal v1 : IntVal v2 : stack)
+    | v2 == 0 = Left "Error: division by zero"
+    | otherwise = exec env args insts (IntVal (v1 `mod` v2) : stack)
 execOperator env args (OpVal Eq1) insts (IntVal v1 : IntVal v2 : stack) = exec env args  insts (BoolVal (v1 == v2) : stack)
 execOperator env args (OpVal Less1) insts (IntVal v1 : IntVal v2 : stack) = exec env args  insts (BoolVal (v1 < v2) : stack)
 
@@ -53,6 +57,8 @@ main = do
     let env = [("fact", Push (FuncVal[PushArg 0, Push(IntVal 1), Push (OpVal Eq1), Call, JumpIfFalse (IntVal 2), Push (IntVal 1), Ret, Push (IntVal 1), PushArg 0, Push(OpVal Subtract1), Call, PushEnv "fact", Call, PushArg 0, Push (OpVal Multiply1), Call , Ret]))]
     let programDivide1 = [Push (IntVal 0), Push (IntVal 42), Push (OpVal Divide1), Call, Ret]
     let programDivide2 = [Push (IntVal 2), Push (IntVal 42), Push (OpVal Divide1), Call, Ret]
+    let programModulo1 = [Push (IntVal 2), Push (IntVal 5), Push (OpVal Modulo1), Call, Ret]
+    let programModulo2 = [Push (IntVal 0), Push (IntVal 9), Push (OpVal Modulo1), Call, Ret]
     let programMultiply = [Push (IntVal 3), Push (IntVal 10), Push (OpVal Multiply1), Call, Ret]
     let programEqual1 = [Push (IntVal 10), Push (IntVal 10), Push (OpVal Eq1), Call, Ret]
     let programEqual2 = [Push (IntVal 10), Push (IntVal 11), Push (OpVal Eq1), Call, Ret]
@@ -71,6 +77,8 @@ main = do
     let programTestJumpIfFalse3 = [Push (IntVal 5), Push (IntVal 6), Push (OpVal Eq1), Call, JumpIfFalse (IntVal 2), Push (IntVal 3), Ret, Push (IntVal 1), Ret]
     putStrLn $ "test Divide 42 / 0: \n" ++ printResult (exec [] args programDivide1 []) ++ "\n"
     putStrLn $ "test Divide 42 / 2: \n" ++ printResult (exec [] args programDivide2 []) ++ "\n"
+    putStrLn $ "test Modulo 5 % 2:\n" ++ printResult (exec [] args programModulo1 []) ++ "\n"
+    putStrLn $ "test Modulo 9 % 0:\n" ++ printResult (exec [] args programModulo2 []) ++ "\n"
     putStrLn $ "test Multiply 3 * 10: \n" ++ printResult (exec [] args programMultiply []) ++ "\n"
     putStrLn $ "test Equal true: \n" ++ printResult (exec [] args programEqual1 []) ++ "\n"
     putStrLn $ "test Equal false: \n" ++ printResult (exec [] args programEqual2 []) ++ "\n"
