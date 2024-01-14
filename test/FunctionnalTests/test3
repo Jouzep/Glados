@@ -1,0 +1,7 @@
+let caca = 1 + 2;
+
+function pipi() {
+    return 1 + 2 + 1;
+}
+
+pipi();

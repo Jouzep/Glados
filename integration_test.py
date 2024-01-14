@@ -24,28 +24,30 @@ def run_haskell_executable(input_data, Expected):
     return f"{Color.GREEN}Success{Color.END}", result.stdout.strip().split("\n")[-1]
 
 test_suites = [
-    {"Name": "Simple define", "Input": "(define foo 21))", "Expected": 'ListOfAst [Define,Var (AstSymb "foo"),Var (AstInt 21)]'},
-    {"Name": "Simple operation on define", "Input": "(define foo 21)\n(* foo 2)", "Expected": "Var (AstInt 42)"},
-    {"Name": "Operation 1", "Input": "(+ 5 5)", "Expected": "Var (AstInt 10)"},
-    {"Name": "Operation 2", "Input": "(* 5 5)", "Expected": "Var (AstInt 25)"},
-    {"Name": "Operation 3", "Input": "(/ 5 5)", "Expected": "Var (AstInt 1)"},
-    {"Name": "Operation 4", "Input": "(- 5 5)", "Expected": "Var (AstInt 0)"},
-    {"Name": "Operation 5", "Input": "(% 5 5)", "Expected": "Var (AstInt 0)"},
-    {"Name": "Lambda 1", "Input": "((lambda (a b) (+ a b)) 1 2)", "Expected": "Var (AstInt 3)"},
-    {"Name": "Lamdba 2", "Input": "(define add(lambda (a b)(+ a b)))\n(add 3 4)", "Expected": "Var (AstInt 7)"},
-    {"Name": "Function 1", "Input": "(define (add a b)(+ a b))\n(add 3 4)", "Expected": "Var (AstInt 7)"},
-    {"Name": "Condition 1", "Input": "(if #t 1 2)", "Expected": "Var (AstInt 1)"},
-    {"Name": "Condition 2", "Input": "(if #f 1 2)", "Expected": "Var (AstInt 2)"},
-    {"Name": "Condition 3", "Input": "(define foo 42)\n(if (< foo 10)(* foo 3)(/ foo 2))", "Expected": "Var (AstInt 21)"},
-    {"Name": "BuiltIn 1", "Input": "(+ (* 2 3) (/ 10 2))", "Expected": "Var (AstInt 11)"},
-    {"Name": "Condition 1", "Input": "(if #t 1 2)", "Expected": "Var (AstInt 1)"},
-    {"Name": "Condition 1", "Input": "(if #t 1 2)", "Expected": "Var (AstInt 1)"},
-    
+    {"Name": "Define Function, call, and return", "Input": "test1", "Expected": '1'},
+    {"Name": "Define Function, call, and return operation", "Input": "test2", "Expected": '2'},
+    {"Name": "Define Function, call, and return multiple operations", "Input": "test3", "Expected": '4'},
+
 ]
+
+def read_file(file_path):
+    try:
+        with open(f"test/FunctionnalTests/{file_path}", 'r') as file:
+            content = file.read()
+            return content
+    except:
+        return "File not found"
+
 if __name__ == "__main__":
     failed = []
     for index, test in enumerate(test_suites):
-        status, message = run_haskell_executable(test["Input"], test["Expected"])
+
+        content = read_file(test["Input"])
+        if (content == "File not found"):
+            print(f"[{Color.RED}Failed{Color.END}]: File not found {test['Input']}")
+            failed.append(name)
+            continue
+        status, message = run_haskell_executable(content, test["Expected"])
         name = test["Name"]  # Corrected line
         print(f"[{status}] {name}: {message}")
         print(f"\t{test}")
