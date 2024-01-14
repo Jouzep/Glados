@@ -6,7 +6,7 @@ Args(..),
 Insts(..),
 Env(..))where
 
-data Value = IntVal Int | BoolVal Bool | FuncVal[Instruction] | OpVal Operator deriving (Show)
+data Value = StringVal String | IntVal Int | BoolVal Bool | FuncVal[Instruction] | OpVal Operator deriving (Show)
 
 data Operator = Add1 | Subtract1 | Multiply1 | Divide1 | Eq1 | Less1 deriving (Show)
 

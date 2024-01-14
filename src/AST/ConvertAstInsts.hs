@@ -1,21 +1,29 @@
 module AST.ConvertAstInsts (convertAstToInsts) where
 
 import AST.Constants
-import AST.Env
 import VirtualMachine.VMConstants
+import Data.Char (isDigit)
 
 convertAstToInsts :: Ast -> VirtualMachine.VMConstants.Env -> (Insts, VirtualMachine.VMConstants.Env)
-convertAstToInsts (Define, Var (AstSymb a)) env = ([PushEnv a, Call], env)  -- Example for AstSymb
-convertAstToInsts (Define, Var (AstFunc a)) env = ([PushEnv a, Call], env)  -- Example for AstFunc
--- convertAstToInsts (Define, Var a) env = ([PushEnv (convertAstconstToValue a), Call], env)  -- Example for other Var cases
-convertAstToInsts (Var a) env = ([Push (convertAstconstToValue a)], env)
-convertAstToInsts (BinaryOp op) env = ([Push (OpVal (convertBinaryOpToOperator op)), Call], env)
--- convertAstToInsts (FunctionCall a) env = ([PushEnv a, Call], env)
-convertAstToInsts (ListOfAst asts) env = foldl (\(accInsts, accEnv) ast -> let (insts, newEnv) = convertAstToInsts ast accEnv in (accInsts ++ insts, newEnv)) ([], env) asts
+convertAstToInsts (Define name value) env list = ([PushEnv name, Call], (name, Push (convertAstToValue value)) : env)
+convertAstToInsts (FunctionDefinition name args body) env list =
+  ([PushEnv name, Call], (name, Push (FuncVal (fst (convertAstToInsts (ListAst body) env)))) : env)
+convertAstToInsts (ListAst asts) env list =
+  foldl (\(accInsts, accEnv) ast -> let (insts, newEnv) = convertAstToInsts ast accEnv in (accInsts ++ insts, newEnv)) ([], env) asts
+convertAstToInsts ast env list = (convertAstToInsts' ast list, env)
 
-convertAstconstToValue :: AstConstant -> Value
-convertAstconstToValue (AstInt a) = IntVal a
-convertAstconstToValue (AstBool a) = BoolVal (convertBoolToBoolVal a)
+convertAstToInsts' :: Ast -> Insts -> Insts
+convertAstToInsts' (Identifier a) list = list ++ [Push (convertIdentifierToValue a)]
+convertAstToInsts' (BinaryOp op) list = list ++ [Push (OpVal (convertBinaryOpToOperator op)), Call]
+convertAstToInsts' (FunctionCall name body) list = list ++ [PushEnv a, Call]
+convertAstToInsts' _ list = list  -- Default case for other Ast types
+
+convertIdentifierToValue :: String -> Value
+convertIdentifierToValue s
+  | all isDigit s = IntVal (read s)
+  | otherwise = StringVal s
+  where
+    isDigit c = c `elem` "0123456789"
 
 convertBoolToBoolVal :: String -> Bool
 convertBoolToBoolVal "#t" = True
