@@ -1,4 +1,4 @@
-module AST.Constants (Ast(..), AstIdentifier(..), AstBinaryOp(..), Func(..), Chiasse(..), Parser(..), CCond(..), Call(..)) where
+module AST.Constants (Ast(..), AstBinaryOp(..), Func(..), Chiasse(..), Parser(..), CCond(..), Call(..)) where
 
 -- PARSER
 
@@ -16,8 +16,8 @@ data Chiasse
   deriving (Eq)
 
 data Ast
-    = Identifier AstIdentifier
-    | Constant String
+    -- = Identifier AstIdentifier
+    = Constant String
     | BinaryOp AstBinaryOp
     | FunctionCall String [Ast]
     | FunctionDefinition String [String] [Ast]
@@ -36,7 +36,7 @@ instance Show Chiasse where
   show (CCall (name, args)) = "CCall " ++ show (name, args)
 
 instance Show Ast where
-  show (Identifier identifier) = "Identifier " ++ show identifier
+--   show (Identifier identifier) = "Identifier " ++ show identifier
   show (Constant s) = show s
   show (BinaryOp binaryOp) = show binaryOp
   show (FunctionCall name args) = "FunctionCall " ++ show (name, args)
@@ -46,22 +46,16 @@ instance Show Ast where
   show (ListAst astList) = show astList
   show (Return value) = "Return " ++ show (value)
 
-data AstIdentifier
-    = String
-    | Number
-    | Boolean
-    deriving (Show, Eq)
+-- data AstIdentifier
+--     = String
+--     | Number
+--     | Boolean
+--     deriving (Show, Eq)
 
 data ReturnIdentifier
     = ReturnString
     | ReturnNumber
     | ReturnBoolean
-data AstConstant
-    = AstInt Int
-    -- | AstList [Ast]
-    | AstSymb String
-    | AstFunc String
-    | AstBool String
     deriving (Show, Eq)
 
 data AstBinaryOp

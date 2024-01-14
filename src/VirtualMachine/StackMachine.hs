@@ -1,6 +1,6 @@
-module StackMachine (exec, execOperator, execGetFunctionFromEnv, printResult) where
+module VirtualMachine.StackMachine (exec, execOperator, execGetFunctionFromEnv, printResult) where
 
-import VMConstants
+import VirtualMachine.VMConstants
 
 exec :: Env -> Args -> Insts -> Stack -> Either String Value
 exec env args [] [result] = Right result

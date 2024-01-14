@@ -5,8 +5,8 @@ import AST.Constants
 import Parser.Parser
 import AST.Tree.ConvertToAst
 import VirtualMachine.Evaluation
-import AST.ConvertAstInsts
 import AST.Env
+import AST.Compiler
 import Lib()
 
 processInput :: String -> AST.Env.Env -> IO ()
@@ -16,6 +16,11 @@ processInput input myEnv = case parser input of
         case convertAllChiasseToAst sexpr of
             Just asts -> do
                 print asts
+                let (insts, env) = compiler asts [] [] []
+                putStr $ "\nList\t:\t"
+                print insts
+                putStr $ "\nEnv\t:\t"
+                print env
             Nothing -> do
                 putStrLn "Invalid input"
                 _ <- loopInput myEnv

@@ -1,4 +1,4 @@
-module VMConstants (Value(..),
+module VirtualMachine.VMConstants (Value(..),
 Operator(..),
 Instruction(..),
 Stack(..),
