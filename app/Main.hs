@@ -1,10 +1,11 @@
 module Main (main) where
 
 import Control.Exception (catch, IOException)
-import AST.Constants()
+import AST.Constants
 import Parser.Parser
 import AST.Tree.ConvertToAst
 import VirtualMachine.Evaluation
+import AST.ConvertAstInsts
 import AST.Env
 import Lib()
 

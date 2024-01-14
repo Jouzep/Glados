@@ -56,6 +56,12 @@ data ReturnIdentifier
     = ReturnString
     | ReturnNumber
     | ReturnBoolean
+data AstConstant
+    = AstInt Int
+    -- | AstList [Ast]
+    | AstSymb String
+    | AstFunc String
+    | AstBool String
     deriving (Show, Eq)
 
 data AstBinaryOp
