@@ -3,12 +3,13 @@ module Parser.Parser
     ) where
 
 import AST.Constants
-import Lib -- import the parser
+import Lib
 
-parser :: String -> Maybe SExpr
+parser :: String -> Maybe [Chiasse]
 parser s =
-  case parseList parseSExpr s of
-    Just (result, _) -> Just (SList result)
-    Nothing -> case parseSExpr s of
-      Just (result, _) -> Just result
-      Nothing -> Nothing
+  case parseChiasse s of
+    Just (result, "") -> Just result
+    Just (result, rest) -> case parseMany (parseChar ' ' `parseOr` parseChar '\n' `parseOr` parseChar '\t') rest of
+        Just (_, "") -> Just result
+        _ -> Nothing
+    Nothing -> Nothing
